@@ -33,7 +33,8 @@ public class Sphere : Hittable
 
         rec.T = root;
         rec.P = r.At(rec.T);
-        rec.Normal = (rec.P - Center) / Radius;
+        var outwardNormal = (rec.P - Center) / Radius;
+        rec.SetFaceNormal(r, outwardNormal);
 
         return true;
     }
