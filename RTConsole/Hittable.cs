@@ -4,6 +4,7 @@ public struct Hit
 {
     public Vec3 P;
     public Vec3 Normal;
+    public Material Material;
     public double T;
     public bool FrontFace;
 
