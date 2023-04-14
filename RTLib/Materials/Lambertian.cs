@@ -20,7 +20,7 @@ public class Lambertian : IMaterial
         if (scatterDirection.NearZero)
             scatterDirection = rec.Normal;
         
-        scattered = new Ray(rec.P, scatterDirection);
+        scattered = new Ray(rec.P, scatterDirection, rIn.Time);
         attenuation = _albedo;
         return true;
     }
