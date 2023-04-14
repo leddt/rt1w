@@ -5,6 +5,7 @@ const double aspectRatio = 16.0 / 9.0;
 const int imageWidth = 400;
 const int imageHeight = (int)(imageWidth / aspectRatio);
 const int samplesPerPixel = 100;
+const int maxDepth = 50;
 
 // World
 var world = new HittableList
@@ -32,7 +33,7 @@ for (var j = imageHeight - 1; j >= 0; j--)
             var u = (i + Random.Shared.NextDouble()) / (imageWidth - 1);
             var v = (j + Random.Shared.NextDouble()) / (imageHeight - 1);
             var r = camera.GetRay(u, v);
-            pixelColor += RayColor(r, world);
+            pixelColor += RayColor(r, world, maxDepth);
         }
         
         pixelColor.WriteColor(Console.Out, samplesPerPixel);
@@ -41,13 +42,15 @@ for (var j = imageHeight - 1; j >= 0; j--)
 
 Console.Error.Write("\nDone.\n");
 
-Vec3 RayColor(Ray r, IHittable world)
+Vec3 RayColor(Ray r, IHittable world, int depth)
 {
+    if (depth <= 0) return new Vec3(0, 0, 0);
+    
     var rec = new Hit();
     if (world.Hit(r, 0, double.PositiveInfinity, ref rec))
     {
         var target = rec.P + rec.Normal + Vec3.RandomInUnitSphere();
-        return 0.5 * RayColor(new Ray(rec.P, target - rec.P), world);
+        return 0.5 * RayColor(new Ray(rec.P, target - rec.P), world, depth - 1);
     }
     
     var unitDirection = Vec3.UnitVector(r.Direction);
