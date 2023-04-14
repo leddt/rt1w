@@ -1,8 +1,8 @@
 ﻿namespace RTLib.Formats;
 
-public static class PpmFormat
+public class PpmFormat : IFormat
 {
-    public static void WriteFile(Stream target, Vec3[,] rgbPixels)
+    public void WriteFile(Stream target, Vec3[,] rgbPixels)
     {
         using var writer = new StreamWriter(target);
 

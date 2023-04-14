@@ -30,12 +30,36 @@ Console.Error.WriteLine("Rendering...");
 var renderer = new ParallelRenderer(renderSettings);
 var pixels = renderer.RenderScene(scene, camera, Console.Error.Write);
 
+
+IFormat fileFormat;
+Stream targetStream;
+
+var commandLine = Environment.GetCommandLineArgs();
+if (commandLine.Length >= 2)
+{
+    var targetFileName = Environment.GetCommandLineArgs()[1];
+    
+    if (targetFileName.EndsWith(".png"))
+        fileFormat = new PngFormat();
+    else if (targetFileName.EndsWith(".ppm"))
+        fileFormat = new PpmFormat();
+    else
+        throw new Exception($"Unsupported file format: {targetFileName}");
+
+    targetStream = File.Create(targetFileName);
+}
+else
+{
+    fileFormat = new PpmFormat();
+    targetStream = Console.OpenStandardOutput();
+}
+
 // Output
 Console.Error.Write("Writing file... ");
 
-using (var output = Console.OpenStandardOutput())
+using (targetStream)
 {
-    PpmFormat.WriteFile(output, pixels);
+    fileFormat.WriteFile(targetStream, pixels);
 }
 
 Console.Error.Write("Done.\n");
