@@ -2,13 +2,15 @@
 
 public class Camera
 {
-    private Vec3 _origin;
-    private Vec3 _lowerLeftCorner;
-    private Vec3 _horizontal;
-    private Vec3 _vertical;
+    private readonly Vec3 _origin;
+    private readonly Vec3 _lowerLeftCorner;
+    private readonly Vec3 _horizontal;
+    private readonly Vec3 _vertical;
 
-    private Vec3 _w, _u, _v;
-    private double _lensRadius;
+    private readonly Vec3 _w, _u, _v;
+    private readonly double _lensRadius;
+
+    private readonly double _time0, _time1;
     
     public Camera(
         Vec3 lookFrom,
@@ -17,7 +19,9 @@ public class Camera
         double vfov, 
         double aspectRatio,
         double aperture,
-        double focusDist)
+        double focusDist,
+        double time0 = 0,
+        double time1 = 0)
     {
         var theta = Utils.DegreesToRadians(vfov);
         var h = Math.Tan(theta / 2);
@@ -43,7 +47,8 @@ public class Camera
         
         return new Ray(
             _origin + offset,
-            _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset
+            _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset,
+            Random.Shared.NextDouble(_time0, _time1)
         );
     }
 }
