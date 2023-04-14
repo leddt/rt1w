@@ -70,12 +70,19 @@ public class Dielectric : Material
         var cannotRefract = refractionRatio * sinTheta > 1;
 
         Vec3 direction;
-        if (cannotRefract)
+        if (cannotRefract || Reflectance(cosTheta, refractionRatio) > Random.Shared.NextDouble())
             direction = Vec3.Reflect(unitDirection, rec.Normal);
         else
             direction = Vec3.Refract(unitDirection, rec.Normal, refractionRatio);
 
         scattered = new Ray(rec.P, direction);
         return true;
+    }
+
+    private static double Reflectance(double cosine, double refIdx)
+    {
+        var r0 = (1 - refIdx) / (1 + refIdx);
+        r0 *= r0;
+        return r0 + (1 - r0) * Math.Pow(1 - cosine, 5);
     }
 }
