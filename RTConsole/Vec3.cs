@@ -73,4 +73,9 @@ public struct Vec3
             return p;
         }
     }
+
+    public static Vec3 RandomUnitVector()
+    {
+        return UnitVector(RandomInUnitSphere());
+    }
 }
