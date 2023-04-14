@@ -38,6 +38,9 @@ public class Camera
         _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDist * _w;
 
         _lensRadius = aperture / 2;
+
+        _time0 = time0;
+        _time1 = time1;
     }
 
     public Ray GetRay(double s, double t)

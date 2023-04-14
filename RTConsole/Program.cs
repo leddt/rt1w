@@ -5,8 +5,8 @@ using RTLib.Materials;
 using RTLib.Model;
 
 var renderSettings = new RenderSettings(
-    aspectRatio: 3.0 / 2.0,
-    imageWidth: 600,
+    aspectRatio: 16.0 / 9.0,
+    imageWidth: 400,
     samplesPerPixel: 100,
     maxDepth: 50
 );
@@ -21,7 +21,8 @@ var camera = new Camera(
     vfov: 20, 
     renderSettings.AspectRatio,
     aperture: 0.1,
-    focusDist: 10);
+    focusDist: 10,
+    0, 1);
 
 var scene = RandomScene();
 
@@ -56,28 +57,31 @@ HittableList RandomScene()
 
         if ((center - new Vec3(4, 0.2, 0)).Length > 0.9)
         {
-            IMaterial mat;
-            
             if (chooseMat < 0.8)
             {
                 // diffuse
                 var albedo = Vec3.Random() * Vec3.Random();
-                mat = new Lambertian(albedo);
+                var mat = new Lambertian(albedo);
+                var center2 = center + new Vec3(0, rng.NextDouble(0, 0.5), 0);
+            
+                world.Add(new MovingSphere(center, center2, 0, 1, 0.2, mat));
             }
             else if (chooseMat < 0.95)
             {
                 // metal
                 var albedo = Vec3.Random(0.5, 1);
                 var fuz = rng.NextDouble(0, 0.5);
-                mat = new Metal(albedo, fuz);
+                var mat = new Metal(albedo, fuz);
+            
+                world.Add(new Sphere(center, 0.2, mat));
             }
             else
             {
                 // glass
-                mat = new Dielectric(1.5);
-            }
+                var mat = new Dielectric(1.5);
             
-            world.Add(new Sphere(center, 0.2, mat));
+                world.Add(new Sphere(center, 0.2, mat));
+            }
         }
     }
 
