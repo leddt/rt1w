@@ -51,4 +51,26 @@ public struct Vec3
         a.X * b.Y - a.Y * b.X
     );
     public static Vec3 UnitVector(Vec3 v) => v / v.Length;
+
+    public static Vec3 Random() => new(
+        System.Random.Shared.NextDouble(),
+        System.Random.Shared.NextDouble(),
+        System.Random.Shared.NextDouble()
+    );
+    
+    public static Vec3 Random(double min, double max) => new(
+        System.Random.Shared.NextDouble(min, max),
+        System.Random.Shared.NextDouble(min, max),
+        System.Random.Shared.NextDouble(min, max)
+    );
+
+    public static Vec3 RandomInUnitSphere()
+    {
+        while (true)
+        {
+            var p = Vec3.Random(-1, 1);
+            if (p.LengthSquared >= 1) continue;
+            return p;
+        }
+    }
 }

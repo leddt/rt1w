@@ -46,12 +46,11 @@ Vec3 RayColor(Ray r, IHittable world)
     var rec = new Hit();
     if (world.Hit(r, 0, double.PositiveInfinity, ref rec))
     {
-        return 0.5 * (rec.Normal + new Vec3(1, 1, 1));
+        var target = rec.P + rec.Normal + Vec3.RandomInUnitSphere();
+        return 0.5 * RayColor(new Ray(rec.P, target - rec.P), world);
     }
     
     var unitDirection = Vec3.UnitVector(r.Direction);
     var t = 0.5 * (unitDirection.Y + 1);
     return (1 - t) * new Vec3(1, 1, 1) + t * new Vec3(0.5, 0.7, 1);
 }
-
-// double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
