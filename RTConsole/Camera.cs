@@ -7,11 +7,13 @@ public class Camera
     private Vec3 _horizontal;
     private Vec3 _vertical;
     
-    public Camera()
+    public Camera(double vfov, double aspectRatio)
     {
-        var aspectRatio = 16.0 / 9.0;
-        var viewportHeight = 2.0;
+        var theta = Utilities.DegreesToRadians(vfov);
+        var h = Math.Tan(theta / 2);
+        var viewportHeight = 2 * h;
         var viewportWidth = aspectRatio * viewportHeight;
+        
         var focalLength = 1.0;
         
         _origin = new Vec3(0, 0, 0);
