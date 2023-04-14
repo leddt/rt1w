@@ -8,10 +8,17 @@ const int samplesPerPixel = 100;
 const int maxDepth = 50;
 
 // World
+var materialGround = new Lambertian(new Vec3(0.8, 0.8, 0));
+var materialCenter = new Lambertian(new Vec3(0.7, 0.3, 0.3));
+var materialLeft = new Metal(new Vec3(0.8, 0.8, 0.8));
+var materialRight = new Metal(new Vec3(0.8, 0.6, 0.2));
+
 var world = new HittableList
 {
-    new Sphere(new Vec3(0, 0, -1), 0.5),
-    new Sphere(new Vec3(0, -100.5, -1), 100)
+    new Sphere(new Vec3(0, -100.5, -1), 100, materialGround),
+    new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter),
+    new Sphere(new Vec3(-1, 0, -1), 0.5, materialLeft),
+    new Sphere(new Vec3(1, 0, -1), 0.5, materialRight)
 };
 
 // Camera
