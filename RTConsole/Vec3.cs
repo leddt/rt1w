@@ -22,9 +22,19 @@ public struct Vec3
 
     public override string ToString() => $"{X} {Y} {Z}";
 
-    public void WriteColor(TextWriter writer) =>
-        writer.Write($"{(int)(255.999 * X)} {(int)(255.999 * Y)} {(int)(255.999 * Z)}\n");
-    
+    public void WriteColor(TextWriter writer, int samplesPerPixel)
+    {
+        var scale = 1.0 / samplesPerPixel;
+        
+        var r = X * scale;
+        var g = Y * scale;
+        var b = Z * scale;
+
+        writer.Write($"{(int)(256 * Math.Clamp(r, 0, 0.999))} " +
+                     $"{(int)(256 * Math.Clamp(g, 0, 0.999))} " +
+                     $"{(int)(256 * Math.Clamp(b, 0, 0.999))}\n");
+    }
+
     public double this[int index] => _components[index];
 
     public static Vec3 operator +(Vec3 a, Vec3 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
