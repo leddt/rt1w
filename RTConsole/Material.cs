@@ -2,5 +2,29 @@
 
 public abstract class Material
 {
-    public abstract bool Scatter(Ray rIn, Hit rec, Vec3 attenuation, out Ray scattered);
+    public abstract bool Scatter(Ray rIn, Hit rec, out Vec3 attenuation, out Ray scattered);
+}
+
+public class Lambertian : Material
+{
+    private readonly Vec3 _albedo;
+
+    public Lambertian(Vec3 albedo)
+    {
+        _albedo = albedo;
+    }
+
+    public override bool Scatter(Ray rIn, Hit rec, out Vec3 attenuation, out Ray scattered)
+    {
+        // var scatterDirection = Vec3.RandomInHemisphere(rec.Normal);
+        var scatterDirection = rec.Normal + Vec3.RandomUnitVector();
+        
+        // Catch degenerate scatter direction
+        if (scatterDirection.NearZero)
+            scatterDirection = rec.Normal;
+        
+        scattered = new Ray(rec.P, scatterDirection);
+        attenuation = _albedo;
+        return true;
+    }
 }

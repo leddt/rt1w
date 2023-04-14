@@ -37,6 +37,20 @@ public struct Vec3
 
     public double this[int index] => _components[index];
 
+    /// <summary>
+    /// Return true if the vector is close to zero in all dimensions.
+    /// </summary>
+    public bool NearZero
+    {
+        get
+        {
+            var s = 1e-8;
+            return Math.Abs(X) < s &&
+                   Math.Abs(Y) < s &&
+                   Math.Abs(Z) < s;
+        }
+    }
+
     public static Vec3 operator +(Vec3 a, Vec3 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
     public static Vec3 operator -(Vec3 a) => new(-a.X, -a.Y, -a.Z);
     public static Vec3 operator -(Vec3 a, Vec3 b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
