@@ -1,6 +1,6 @@
 ﻿namespace RTConsole;
 
-public class Sphere : Hittable
+public class Sphere : IHittable
 {
     public Sphere(Vec3 center, double radius)
     {
@@ -11,7 +11,7 @@ public class Sphere : Hittable
     public Vec3 Center { get; }
     public double Radius { get; }
 
-    public override bool Hit(Ray r, double tMin, double tMax, ref Hit rec)
+    public bool Hit(Ray r, double tMin, double tMax, ref Hit rec)
     {
         var oc = r.Origin - Center;
         var a = r.Direction.LengthSquared;

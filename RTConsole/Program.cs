@@ -5,6 +5,13 @@ const double aspectRatio = 16.0 / 9.0;
 const int imageWidth = 400;
 const int imageHeight = (int)(imageWidth / aspectRatio);
 
+// World
+var world = new HittableList
+{
+    new Sphere(new Vec3(0, 0, -1), 0.5),
+    new Sphere(new Vec3(0, -100.5, -1), 100)
+};
+
 // Camera
 var viewportHeight = 2.0;
 var viewportWidth = aspectRatio * viewportHeight;
@@ -28,36 +35,24 @@ for (var j = imageHeight - 1; j >= 0; j--)
         var v = (double)j / (imageHeight - 1);
         var r = new Ray(origin, lowerLeftCorner + u * horizontal + v * vertical - origin);
         
-        var pixelColor = RayColor(r);
+        var pixelColor = RayColor(r, world);
         pixelColor.WriteColor(Console.Out);
     }
 }
 
 Console.Error.Write("\nDone.\n");
 
-Vec3 RayColor(Ray r)
+Vec3 RayColor(Ray r, IHittable world)
 {
-    var t = HitSphere(new Vec3(0, 0, -1), 0.5, r);
-    if (t > 0)
+    var rec = new Hit();
+    if (world.Hit(r, 0, double.PositiveInfinity, ref rec))
     {
-        var n = Vec3.UnitVector(r.At(t) - new Vec3(0, 0, -1));
-        return 0.5 * new Vec3(n.X + 1, n.Y + 1, n.Z + 1);
+        return 0.5 * (rec.Normal + new Vec3(1, 1, 1));
     }
     
     var unitDirection = Vec3.UnitVector(r.Direction);
-    t = 0.5 * (unitDirection.Y + 1);
+    var t = 0.5 * (unitDirection.Y + 1);
     return (1 - t) * new Vec3(1, 1, 1) + t * new Vec3(0.5, 0.7, 1);
 }
 
-double HitSphere(Vec3 center, double radius, Ray r)
-{
-    var oc = r.Origin - center;
-    var a = r.Direction.LengthSquared;
-    var halfB = Vec3.Dot(oc, r.Direction);
-    var c = oc.LengthSquared - radius * radius;
-    var discriminant = halfB * halfB - a * c;
-
-    if (discriminant < 0) return -1;
-
-    return (-halfB - Math.Sqrt(discriminant)) / a;
-}
+double DegreesToRadians(double degrees) => degrees * Math.PI / 180;
