@@ -1,38 +1,26 @@
 ﻿using RTConsole;
 
 // Image
-const double aspectRatio = 16.0 / 9.0;
-const int imageWidth = 400;
+const double aspectRatio = 3.0 / 2.0;
+const int imageWidth = 1200;
 const int imageHeight = (int)(imageWidth / aspectRatio);
-const int samplesPerPixel = 100;
+const int samplesPerPixel = 500;
 const int maxDepth = 50;
 
 // World
-var materialGround = new Lambertian(new Vec3(0.8, 0.8, 0));
-var materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
-var materialLeft = new Dielectric(1.5);
-var materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 0);
-
-var world = new HittableList
-{
-    new Sphere(new Vec3(0, -100.5, -1), 100, materialGround),
-    new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter),
-    new Sphere(new Vec3(-1, 0, -1), 0.5, materialLeft),
-    new Sphere(new Vec3(-1, 0, -1), -0.45, materialLeft),
-    new Sphere(new Vec3(1, 0, -1), 0.5, materialRight)
-};
+var world = RandomScene();
 
 // Camera
-var lookFrom = new Vec3(3, 3, 2);
-var lookAt = new Vec3(0, 0, -1);
+var lookFrom = new Vec3(13, 2, 3);
+var lookAt = new Vec3(0, 0, 0);
 var camera = new Camera(
     lookFrom, 
     lookAt, 
     vUp: new Vec3(0, 1, 0), 
     vfov: 20, 
     aspectRatio,
-    aperture: 2,
-    focusDist: (lookFrom - lookAt).Length);
+    aperture: 0.1,
+    focusDist: 10);
 
 // Render
 
@@ -75,4 +63,53 @@ Vec3 RayColor(Ray r, IHittable world, int depth)
     var unitDirection = Vec3.UnitVector(r.Direction);
     var t = 0.5 * (unitDirection.Y + 1);
     return (1 - t) * new Vec3(1, 1, 1) + t * new Vec3(0.5, 0.7, 1);
+}
+
+HittableList RandomScene()
+{
+    var world = new HittableList();
+
+    var groundMaterial = new Lambertian(new Vec3(0.5, 0.5, 0.5));
+    world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, groundMaterial));
+
+    var rng = Random.Shared;
+    
+    for (var a = -11; a < 11; a++)
+    for (var b = -11; b < 11; b++)
+    {
+        var chooseMat = rng.NextDouble();
+        var center = new Vec3(a + 0.9 * rng.NextDouble(), 0.2, b + 0.9 * rng.NextDouble());
+
+        if ((center - new Vec3(4, 0.2, 0)).Length > 0.9)
+        {
+            Material mat;
+            
+            if (chooseMat < 0.8)
+            {
+                // diffuse
+                var albedo = Vec3.Random() * Vec3.Random();
+                mat = new Lambertian(albedo);
+            }
+            else if (chooseMat < 0.95)
+            {
+                // metal
+                var albedo = Vec3.Random(0.5, 1);
+                var fuz = rng.NextDouble(0, 0.5);
+                mat = new Metal(albedo, fuz);
+            }
+            else
+            {
+                // glass
+                mat = new Dielectric(1.5);
+            }
+            
+            world.Add(new Sphere(center, 0.2, mat));
+        }
+    }
+
+    world.Add(new Sphere(new Vec3(0, 1, 0), 1, new Dielectric(1.5)));
+    world.Add(new Sphere(new Vec3(-4, 1, 0), 1, new Lambertian(new Vec3(0.4, 0.2, 0.1))));
+    world.Add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(0.7, 0.6, 0.5), 0)));
+
+    return world;
 }
