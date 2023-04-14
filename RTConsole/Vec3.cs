@@ -78,4 +78,13 @@ public struct Vec3
     {
         return UnitVector(RandomInUnitSphere());
     }
+
+    public static Vec3 RandomInHemisphere(Vec3 normal)
+    {
+        var inUnitSphere = RandomInUnitSphere();
+        if (Dot(inUnitSphere, normal) > 0) // In the same hemisphere as the normal
+            return inUnitSphere;
+        else
+            return -inUnitSphere;
+    }
 }
