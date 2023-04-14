@@ -8,19 +8,27 @@ const int samplesPerPixel = 100;
 const int maxDepth = 50;
 
 // World
-var R = Math.Cos(Math.PI / 4);
-
-var materialLeft = new Lambertian(new Vec3(0, 0, 1));
-var materialRight = new Lambertian(new Vec3(1, 0, 0));
+var materialGround = new Lambertian(new Vec3(0.8, 0.8, 0));
+var materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
+var materialLeft = new Dielectric(1.5);
+var materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 0);
 
 var world = new HittableList
 {
-    new Sphere(new Vec3(-R, 0, -1), R, materialLeft),
-    new Sphere(new Vec3(R, 0, -1), R, materialRight),
+    new Sphere(new Vec3(0, -100.5, -1), 100, materialGround),
+    new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter),
+    new Sphere(new Vec3(-1, 0, -1), 0.5, materialLeft),
+    new Sphere(new Vec3(-1, 0, -1), -0.45, materialLeft),
+    new Sphere(new Vec3(1, 0, -1), 0.5, materialRight)
 };
 
 // Camera
-var camera = new Camera(90, aspectRatio);
+var camera = new Camera(
+    lookFrom: new Vec3(-2, 2, 1), 
+    lookAt: new Vec3(0, 0, -1), 
+    vUp: new Vec3(0, 1, 0), 
+    vfov: 20, 
+    aspectRatio);
 
 // Render
 
