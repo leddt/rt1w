@@ -23,12 +23,16 @@ var world = new HittableList
 };
 
 // Camera
+var lookFrom = new Vec3(3, 3, 2);
+var lookAt = new Vec3(0, 0, -1);
 var camera = new Camera(
-    lookFrom: new Vec3(-2, 2, 1), 
-    lookAt: new Vec3(0, 0, -1), 
+    lookFrom, 
+    lookAt, 
     vUp: new Vec3(0, 1, 0), 
     vfov: 20, 
-    aspectRatio);
+    aspectRatio,
+    aperture: 2,
+    focusDist: (lookFrom - lookAt).Length);
 
 // Render
 

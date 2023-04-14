@@ -103,6 +103,16 @@ public struct Vec3
             return -inUnitSphere;
     }
 
+    public static Vec3 RandomInUnitDisk()
+    {
+        while (true)
+        {
+            var p = new Vec3(System.Random.Shared.NextDouble(-1, 1), System.Random.Shared.NextDouble(-1, 1), 0);
+            if (p.LengthSquared >= 1) continue;
+            return p;
+        }
+    }
+
     public static Vec3 Reflect(Vec3 v, Vec3 n)
     {
         return v - 2 * Dot(v, n) * n;

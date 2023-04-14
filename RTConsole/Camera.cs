@@ -6,34 +6,44 @@ public class Camera
     private Vec3 _lowerLeftCorner;
     private Vec3 _horizontal;
     private Vec3 _vertical;
+
+    private Vec3 _w, _u, _v;
+    private double _lensRadius;
     
     public Camera(
         Vec3 lookFrom,
         Vec3 lookAt,
         Vec3 vUp,
         double vfov, 
-        double aspectRatio)
+        double aspectRatio,
+        double aperture,
+        double focusDist)
     {
         var theta = Utilities.DegreesToRadians(vfov);
         var h = Math.Tan(theta / 2);
         var viewportHeight = 2 * h;
         var viewportWidth = aspectRatio * viewportHeight;
 
-        var w = Vec3.UnitVector(lookFrom - lookAt);
-        var u = Vec3.UnitVector(Vec3.Cross(vUp, w));
-        var v = Vec3.Cross(w, u);
+        _w = Vec3.UnitVector(lookFrom - lookAt);
+        _u = Vec3.UnitVector(Vec3.Cross(vUp, _w));
+        _v = Vec3.Cross(_w, _u);
         
         _origin = lookFrom;
-        _horizontal = viewportWidth * u;
-        _vertical = viewportHeight * v;
-        _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - w;
+        _horizontal = focusDist * viewportWidth * _u;
+        _vertical = focusDist * viewportHeight * _v;
+        _lowerLeftCorner = _origin - _horizontal / 2 - _vertical / 2 - focusDist * _w;
+
+        _lensRadius = aperture / 2;
     }
 
     public Ray GetRay(double s, double t)
     {
+        var rd = _lensRadius * Vec3.RandomInUnitDisk();
+        var offset = _u * rd.X + _v * rd.Y;
+        
         return new Ray(
-            _origin,
-            _lowerLeftCorner + s * _horizontal + t * _vertical - _origin
+            _origin + offset,
+            _lowerLeftCorner + s * _horizontal + t * _vertical - _origin - offset
         );
     }
 }
