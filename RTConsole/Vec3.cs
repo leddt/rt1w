@@ -21,6 +21,9 @@ public struct Vec3
     public double LengthSquared => X * X + Y * Y + Z * Z;
 
     public override string ToString() => $"{X} {Y} {Z}";
+
+    public void WriteColor(TextWriter writer) =>
+        writer.Write($"{(int)(255.999 * X)} {(int)(255.999 * Y)} {(int)(255.999 * Z)}\n");
     
     public double this[int index] => _components[index];
 
