@@ -9,9 +9,9 @@ const int maxDepth = 50;
 
 // World
 var materialGround = new Lambertian(new Vec3(0.8, 0.8, 0));
-var materialCenter = new Dielectric(1.5);
+var materialCenter = new Lambertian(new Vec3(0.1, 0.2, 0.5));
 var materialLeft = new Dielectric(1.5);
-var materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 1);
+var materialRight = new Metal(new Vec3(0.8, 0.6, 0.2), 0);
 
 var world = new HittableList
 {

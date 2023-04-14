@@ -64,9 +64,18 @@ public class Dielectric : Material
         var refractionRatio = rec.FrontFace ? 1.0 / _ir : _ir;
 
         var unitDirection = Vec3.UnitVector(rIn.Direction);
-        var refracted = Vec3.Refract(unitDirection, rec.Normal, refractionRatio);
+        var cosTheta = Math.Min(Vec3.Dot(-unitDirection, rec.Normal), 1.0);
+        var sinTheta = Math.Sqrt(1 - cosTheta * cosTheta);
 
-        scattered = new Ray(rec.P, refracted);
+        var cannotRefract = refractionRatio * sinTheta > 1;
+
+        Vec3 direction;
+        if (cannotRefract)
+            direction = Vec3.Reflect(unitDirection, rec.Normal);
+        else
+            direction = Vec3.Refract(unitDirection, rec.Normal, refractionRatio);
+
+        scattered = new Ray(rec.P, direction);
         return true;
     }
 }
