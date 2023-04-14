@@ -2,27 +2,25 @@
 
 public struct Vec3
 {
-    private readonly double[] _components = new double[3];
-    
-    public Vec3() : this(0, 0, 0)
-    {
-    }
-
     public Vec3(double x, double y, double z)
     {
-        _components = new[] { x, y, z };
+        X = x;
+        Y = y;
+        Z = z;
+
+        LengthSquared = X * X + Y * Y + Z * Z;
     }
 
-    public double X => _components[0];
-    public double Y => _components[1];
-    public double Z => _components[2];
+    public readonly double X;
+    public readonly double Y;
+    public readonly double Z;
 
     public double Length => Math.Sqrt(LengthSquared);
-    public double LengthSquared => X * X + Y * Y + Z * Z;
+    public readonly double LengthSquared;
 
     public override string ToString() => $"{X} {Y} {Z}";
 
-    public void WriteColor(TextWriter writer, int samplesPerPixel)
+    public string GetColorLine(int samplesPerPixel)
     {
         // Divide the color by the number of samples and gamma-correct for gamma=2.0.
         var scale = 1.0 / samplesPerPixel;
@@ -30,12 +28,14 @@ public struct Vec3
         var g = Math.Sqrt(Y * scale);
         var b = Math.Sqrt(Z * scale);
 
-        writer.Write($"{(int)(256 * Math.Clamp(r, 0, 0.999))} " +
-                     $"{(int)(256 * Math.Clamp(g, 0, 0.999))} " +
-                     $"{(int)(256 * Math.Clamp(b, 0, 0.999))}\n");
+        return $"{(int)(256 * Math.Clamp(r, 0, 0.999))} " +
+               $"{(int)(256 * Math.Clamp(g, 0, 0.999))} " +
+               $"{(int)(256 * Math.Clamp(b, 0, 0.999))}";
     }
-
-    public double this[int index] => _components[index];
+    public void WriteColor(TextWriter writer, int samplesPerPixel)
+    {
+        writer.WriteLine(GetColorLine(samplesPerPixel));
+    }
 
     /// <summary>
     /// Return true if the vector is close to zero in all dimensions.

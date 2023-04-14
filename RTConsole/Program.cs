@@ -1,4 +1,6 @@
 ﻿using RTConsole;
+using RTConsole.Hittables;
+using RTConsole.Materials;
 
 // Image
 const double aspectRatio = 3.0 / 2.0;
@@ -24,15 +26,17 @@ var camera = new Camera(
 
 // Render
 
-Console.Write($"P3\n{imageWidth} {imageHeight}\n255\n");
+var canvas = new Vec3[imageWidth, imageHeight];
 
-for (var j = imageHeight - 1; j >= 0; j--)
+Console.Error.WriteLine("Rendering...");
+
+var linesRemaining = imageHeight;
+Parallel.For(0, imageHeight, j =>
 {
-    Console.Error.Write($"\rScanlines remaining: {j} ");
     for (var i = 0; i < imageWidth; i++)
     {
         var pixelColor = new Vec3(0, 0, 0);
-        
+
         for (int s = 0; s < samplesPerPixel; s++)
         {
             var u = (i + Random.Shared.NextDouble()) / (imageWidth - 1);
@@ -40,12 +44,21 @@ for (var j = imageHeight - 1; j >= 0; j--)
             var r = camera.GetRay(u, v);
             pixelColor += RayColor(r, world, maxDepth);
         }
-        
-        pixelColor.WriteColor(Console.Out, samplesPerPixel);
-    }
-}
 
-Console.Error.Write("\nDone.\n");
+        canvas[i, j] = pixelColor;
+    }
+    
+    Console.Error.Write($"\rLines: {Interlocked.Decrement(ref linesRemaining)} ");
+});
+
+Console.Error.Write("Writing file... ");
+
+Console.WriteLine($"P3\n{imageWidth} {imageHeight}\n255");
+for (var j = imageHeight - 1; j >= 0; j--)
+for (var i = 0; i < imageWidth; i++)
+    canvas[i, j].WriteColor(Console.Out, samplesPerPixel);
+
+Console.Error.Write("Done.\n");
 
 Vec3 RayColor(Ray r, IHittable world, int depth)
 {
@@ -82,7 +95,7 @@ HittableList RandomScene()
 
         if ((center - new Vec3(4, 0.2, 0)).Length > 0.9)
         {
-            Material mat;
+            IMaterial mat;
             
             if (chooseMat < 0.8)
             {

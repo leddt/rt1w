@@ -1,17 +1,19 @@
-﻿namespace RTConsole;
+﻿using RTConsole.Materials;
+
+namespace RTConsole.Hittables;
 
 public class Sphere : IHittable
 {
-    public Sphere(Vec3 center, double radius, Material material)
+    public Sphere(Vec3 center, double radius, IMaterial material)
     {
         Center = center;
         Radius = radius;
         Material = material;
     }
 
-    public Vec3 Center { get; }
-    public double Radius { get; }
-    public Material Material { get; }
+    public readonly Vec3 Center;
+    public readonly double Radius;
+    public readonly IMaterial Material;
 
     public bool Hit(Ray r, double tMin, double tMax, ref Hit rec)
     {

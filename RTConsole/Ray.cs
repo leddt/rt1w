@@ -8,8 +8,8 @@ public struct Ray
         Direction = direction;
     }
 
-    public Vec3 Origin { get; }
-    public Vec3 Direction { get; }
+    public readonly Vec3 Origin;
+    public readonly Vec3 Direction;
 
     public Vec3 At(double t) => Origin + t * Direction;
 }

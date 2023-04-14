@@ -19,7 +19,7 @@ public class Camera
         double aperture,
         double focusDist)
     {
-        var theta = Utilities.DegreesToRadians(vfov);
+        var theta = Utils.DegreesToRadians(vfov);
         var h = Math.Tan(theta / 2);
         var viewportHeight = 2 * h;
         var viewportWidth = aspectRatio * viewportHeight;
