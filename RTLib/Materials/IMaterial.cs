@@ -1,4 +1,6 @@
-﻿namespace RTLib.Materials;
+﻿using RTLib.Model;
+
+namespace RTLib.Materials;
 
 public interface IMaterial
 {

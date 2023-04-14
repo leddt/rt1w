@@ -1,6 +1,6 @@
 ﻿using RTLib.Materials;
 
-namespace RTLib;
+namespace RTLib.Model;
 
 public struct Hit
 {

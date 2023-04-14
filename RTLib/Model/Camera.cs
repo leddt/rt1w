@@ -1,4 +1,4 @@
-﻿namespace RTLib;
+﻿namespace RTLib.Model;
 
 public class Camera
 {

@@ -1,4 +1,5 @@
 ﻿using RTLib.Materials;
+using RTLib.Model;
 
 namespace RTLib.Hittables;
 

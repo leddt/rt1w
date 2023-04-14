@@ -2,6 +2,7 @@
 using RTLib.Formats;
 using RTLib.Hittables;
 using RTLib.Materials;
+using RTLib.Model;
 
 var renderSettings = new RenderSettings(
     aspectRatio: 3.0 / 2.0,

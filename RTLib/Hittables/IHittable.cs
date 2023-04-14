@@ -1,4 +1,6 @@
-﻿namespace RTLib.Hittables;
+﻿using RTLib.Model;
+
+namespace RTLib.Hittables;
 
 public interface IHittable
 {
