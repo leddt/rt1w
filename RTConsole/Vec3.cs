@@ -103,8 +103,16 @@ public struct Vec3
             return -inUnitSphere;
     }
 
-    public static Vec3 Reflect(Vec3 v, Vec3 normal)
+    public static Vec3 Reflect(Vec3 v, Vec3 n)
     {
-        return v - 2 * Dot(v, normal) * normal;
+        return v - 2 * Dot(v, n) * n;
+    }
+
+    public static Vec3 Refract(Vec3 uv, Vec3 n, double etaiOverEtat)
+    {
+        var cosTheta = Math.Min(Dot(-uv, n), 1);
+        var rOutPerp = etaiOverEtat * (uv + cosTheta * n);
+        var rOutParallel = -Math.Sqrt(Math.Abs(1 - rOutPerp.LengthSquared)) * n;
+        return rOutPerp + rOutParallel;
     }
 }
