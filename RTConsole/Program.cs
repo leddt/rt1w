@@ -49,8 +49,10 @@ Vec3 RayColor(Ray r, IHittable world, int depth)
     var rec = new Hit();
     if (world.Hit(r, 0.001, double.PositiveInfinity, ref rec))
     {
-        var target = rec.P + Vec3.RandomInHemisphere(rec.Normal);
-        return 0.5 * RayColor(new Ray(rec.P, target - rec.P), world, depth - 1);
+        if (rec.Material.Scatter(r, rec, out var attenuation, out var scattered))
+            return attenuation * RayColor(scattered, world, depth - 1);
+
+        return new Vec3(0, 0, 0);
     }
     
     var unitDirection = Vec3.UnitVector(r.Direction);

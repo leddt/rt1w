@@ -54,6 +54,7 @@ public struct Vec3
     public static Vec3 operator +(Vec3 a, Vec3 b) => new(a.X + b.X, a.Y + b.Y, a.Z + b.Z);
     public static Vec3 operator -(Vec3 a) => new(-a.X, -a.Y, -a.Z);
     public static Vec3 operator -(Vec3 a, Vec3 b) => new(a.X - b.X, a.Y - b.Y, a.Z - b.Z);
+    public static Vec3 operator *(Vec3 a, Vec3 b) => new(a.X * b.X, a.Y * b.Y, a.Z * b.Z);
     public static Vec3 operator *(Vec3 vec, double t) => new(vec.X * t, vec.Y * t, vec.Z * t);
     public static Vec3 operator *(double t, Vec3 vec) => vec * t;
     public static Vec3 operator /(Vec3 vec, double t) => vec * (1 / t);
@@ -100,5 +101,10 @@ public struct Vec3
             return inUnitSphere;
         else
             return -inUnitSphere;
+    }
+
+    public static Vec3 Reflect(Vec3 v, Vec3 normal)
+    {
+        return v - 2 * Dot(v, normal) * normal;
     }
 }

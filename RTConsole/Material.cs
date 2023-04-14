@@ -28,3 +28,21 @@ public class Lambertian : Material
         return true;
     }
 }
+
+public class Metal : Material
+{
+    private readonly Vec3 _albedo;
+
+    public Metal(Vec3 albedo)
+    {
+        _albedo = albedo;
+    }
+
+    public override bool Scatter(Ray rIn, Hit rec, out Vec3 attenuation, out Ray scattered)
+    {
+        var reflected = Vec3.Reflect(Vec3.UnitVector(rIn.Direction), rec.Normal);
+        scattered = new Ray(rec.P, reflected);
+        attenuation = _albedo;
+        return Vec3.Dot(scattered.Direction, rec.Normal) > 0;
+    }
+}
