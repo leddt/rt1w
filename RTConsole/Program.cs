@@ -1,8 +1,11 @@
-﻿using RTLib;
+﻿using System.Diagnostics;
+using RTLib;
 using RTLib.Formats;
 using RTLib.Hittables;
 using RTLib.Materials;
 using RTLib.Model;
+
+var sw = Stopwatch.StartNew();
 
 var renderSettings = new RenderSettings(
     aspectRatio: 16.0 / 9.0,
@@ -38,7 +41,7 @@ using (var outputStream = GetOutputStream(out var format))
     format.WriteFile(outputStream, pixels);
 }
 
-Console.Error.Write("Done.\n");
+Console.Error.Write($"Done ({sw.Elapsed})\n");
 
 HittableList RandomScene()
 {
