@@ -18,6 +18,7 @@ var world = new HittableList
     new Sphere(new Vec3(0, -100.5, -1), 100, materialGround),
     new Sphere(new Vec3(0, 0, -1), 0.5, materialCenter),
     new Sphere(new Vec3(-1, 0, -1), 0.5, materialLeft),
+    new Sphere(new Vec3(-1, 0, -1), -0.4, materialLeft),
     new Sphere(new Vec3(1, 0, -1), 0.5, materialRight)
 };
 
