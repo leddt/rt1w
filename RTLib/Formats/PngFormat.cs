@@ -1,8 +1,9 @@
-﻿using System.Drawing.Imaging;
+﻿using SixLabors.ImageSharp.Formats;
+using SixLabors.ImageSharp.Formats.Png;
 
 namespace RTLib.Formats;
 
-public class PngFormat : BitmapFormat
+public class PngFormat : ImageFormat
 {
-    protected override ImageFormat Format => ImageFormat.Png;
+    protected override IImageEncoder GetEncoder() => new PngEncoder();
 }
