@@ -52,12 +52,12 @@ Vec3 RayColor(Ray r)
 double HitSphere(Vec3 center, double radius, Ray r)
 {
     var oc = r.Origin - center;
-    var a = Vec3.Dot(r.Direction, r.Direction);
-    var b = 2 * Vec3.Dot(oc, r.Direction);
-    var c = Vec3.Dot(oc, oc) - radius * radius;
-    var discriminant = b * b - 4 * a * c;
+    var a = r.Direction.LengthSquared;
+    var halfB = Vec3.Dot(oc, r.Direction);
+    var c = oc.LengthSquared - radius * radius;
+    var discriminant = halfB * halfB - a * c;
 
     if (discriminant < 0) return -1;
 
-    return (-b - Math.Sqrt(discriminant)) / (2 * a);
+    return (-halfB - Math.Sqrt(discriminant)) / a;
 }
