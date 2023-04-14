@@ -1,12 +1,13 @@
 ﻿using RTConsole;
+using RTConsole.Formats;
 using RTConsole.Hittables;
 using RTConsole.Materials;
 
 // Image
 const double aspectRatio = 3.0 / 2.0;
-const int imageWidth = 1200;
+const int imageWidth = 600;
 const int imageHeight = (int)(imageWidth / aspectRatio);
-const int samplesPerPixel = 500;
+const int samplesPerPixel = 100;
 const int maxDepth = 50;
 
 // World
@@ -53,10 +54,10 @@ Parallel.For(0, imageHeight, j =>
 
 Console.Error.Write("Writing file... ");
 
-Console.WriteLine($"P3\n{imageWidth} {imageHeight}\n255");
-for (var j = imageHeight - 1; j >= 0; j--)
-for (var i = 0; i < imageWidth; i++)
-    canvas[i, j].WriteColor(Console.Out, samplesPerPixel);
+using (var output = Console.OpenStandardOutput())
+{
+    PpmFormat.WriteFile(output, canvas, samplesPerPixel);
+}
 
 Console.Error.Write("Done.\n");
 
