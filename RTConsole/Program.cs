@@ -37,7 +37,20 @@ Console.Error.Write("\nDone.\n");
 
 Vec3 RayColor(Ray r)
 {
+    if (HitSphere(new Vec3(0, 0, -1), 0.5, r))
+        return new Vec3(1, 0, 0);
+    
     var unitDirection = Vec3.UnitVector(r.Direction);
     var t = 0.5 * (unitDirection.Y + 1);
     return (1 - t) * new Vec3(1, 1, 1) + t * new Vec3(0.5, 0.7, 1);
+}
+
+bool HitSphere(Vec3 center, double radius, Ray r)
+{
+    var oc = r.Origin - center;
+    var a = Vec3.Dot(r.Direction, r.Direction);
+    var b = 2 * Vec3.Dot(oc, r.Direction);
+    var c = Vec3.Dot(oc, oc) - radius * radius;
+    var discriminant = b * b - 4 * a * c;
+    return discriminant > 0;
 }
