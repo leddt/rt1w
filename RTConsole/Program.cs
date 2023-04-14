@@ -11,8 +11,6 @@ var renderSettings = new RenderSettings(
     maxDepth: 50
 );
 
-var scene = RandomScene();
-
 // Camera
 var lookFrom = new Vec3(13, 2, 3);
 var lookAt = new Vec3(0, 0, 0);
@@ -25,42 +23,18 @@ var camera = new Camera(
     aperture: 0.1,
     focusDist: 10);
 
+var scene = RandomScene();
+
 // Render
 Console.Error.WriteLine("Rendering...");
-
 var renderer = new ParallelRenderer(renderSettings);
 var pixels = renderer.RenderScene(scene, camera, Console.Error.Write);
 
-
-IFormat fileFormat;
-Stream targetStream;
-
-var commandLine = Environment.GetCommandLineArgs();
-if (commandLine.Length >= 2)
-{
-    var targetFileName = Environment.GetCommandLineArgs()[1];
-    
-    if (targetFileName.EndsWith(".png"))
-        fileFormat = new PngFormat();
-    else if (targetFileName.EndsWith(".ppm"))
-        fileFormat = new PpmFormat();
-    else
-        throw new Exception($"Unsupported file format: {targetFileName}");
-
-    targetStream = File.Create(targetFileName);
-}
-else
-{
-    fileFormat = new PpmFormat();
-    targetStream = Console.OpenStandardOutput();
-}
-
 // Output
 Console.Error.Write("Writing file... ");
-
-using (targetStream)
+using (var outputStream = GetOutputStream(out var format))
 {
-    fileFormat.WriteFile(targetStream, pixels);
+    format.WriteFile(outputStream, pixels);
 }
 
 Console.Error.Write("Done.\n");
@@ -112,4 +86,25 @@ HittableList RandomScene()
     world.Add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(0.7, 0.6, 0.5), 0)));
 
     return world;
+}
+
+Stream GetOutputStream(out IFormat format)
+{
+    var commandLine = Environment.GetCommandLineArgs();
+    if (commandLine.Length >= 2)
+    {
+        var targetFileName = Environment.GetCommandLineArgs()[1];
+
+        if (targetFileName.EndsWith(".png"))
+            format = new PngFormat();
+        else if (targetFileName.EndsWith(".ppm"))
+            format = new PpmFormat();
+        else
+            throw new Exception($"Unsupported file format: {targetFileName}");
+
+        return File.Create(targetFileName);
+    }
+
+    format = new PpmFormat();
+    return Console.OpenStandardOutput();
 }
