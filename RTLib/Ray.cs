@@ -1,4 +1,4 @@
-﻿namespace RTConsole;
+﻿namespace RTLib;
 
 public struct Ray
 {

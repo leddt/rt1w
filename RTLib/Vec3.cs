@@ -1,4 +1,4 @@
-﻿namespace RTConsole;
+﻿namespace RTLib;
 
 public struct Vec3
 {
@@ -20,21 +20,15 @@ public struct Vec3
 
     public override string ToString() => $"{X} {Y} {Z}";
 
-    public string GetColorLine(int samplesPerPixel)
+    public Vec3 ToRGB(int samplesPerPixel)
     {
         // Divide the color by the number of samples and gamma-correct for gamma=2.0.
         var scale = 1.0 / samplesPerPixel;
-        var r = Math.Sqrt(X * scale);
-        var g = Math.Sqrt(Y * scale);
-        var b = Math.Sqrt(Z * scale);
-
-        return $"{(int)(256 * Math.Clamp(r, 0, 0.999))} " +
-               $"{(int)(256 * Math.Clamp(g, 0, 0.999))} " +
-               $"{(int)(256 * Math.Clamp(b, 0, 0.999))}";
-    }
-    public void WriteColor(TextWriter writer, int samplesPerPixel)
-    {
-        writer.WriteLine(GetColorLine(samplesPerPixel));
+        return new Vec3(
+            Math.Sqrt(X * scale),
+            Math.Sqrt(Y * scale),
+            Math.Sqrt(Z * scale)
+        );
     }
 
     /// <summary>

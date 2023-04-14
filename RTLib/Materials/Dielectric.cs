@@ -1,4 +1,4 @@
-﻿namespace RTConsole.Materials;
+﻿namespace RTLib.Materials;
 
 public class Dielectric : IMaterial
 {

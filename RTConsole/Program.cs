@@ -1,17 +1,16 @@
-﻿using RTConsole;
-using RTConsole.Formats;
-using RTConsole.Hittables;
-using RTConsole.Materials;
+﻿using RTLib;
+using RTLib.Formats;
+using RTLib.Hittables;
+using RTLib.Materials;
 
-// Image
-const double aspectRatio = 3.0 / 2.0;
-const int imageWidth = 600;
-const int imageHeight = (int)(imageWidth / aspectRatio);
-const int samplesPerPixel = 100;
-const int maxDepth = 50;
+var renderSettings = new RenderSettings(
+    aspectRatio: 3.0 / 2.0,
+    imageWidth: 600,
+    samplesPerPixel: 100,
+    maxDepth: 50
+);
 
-// World
-var world = RandomScene();
+var scene = RandomScene();
 
 // Camera
 var lookFrom = new Vec3(13, 2, 3);
@@ -21,63 +20,25 @@ var camera = new Camera(
     lookAt, 
     vUp: new Vec3(0, 1, 0), 
     vfov: 20, 
-    aspectRatio,
+    renderSettings.AspectRatio,
     aperture: 0.1,
     focusDist: 10);
 
 // Render
-
-var canvas = new Vec3[imageWidth, imageHeight];
-
 Console.Error.WriteLine("Rendering...");
 
-var linesRemaining = imageHeight;
-Parallel.For(0, imageHeight, j =>
-{
-    for (var i = 0; i < imageWidth; i++)
-    {
-        var pixelColor = new Vec3(0, 0, 0);
+var renderer = new ParallelRenderer(renderSettings);
+var pixels = renderer.RenderScene(scene, camera, Console.Error.Write);
 
-        for (int s = 0; s < samplesPerPixel; s++)
-        {
-            var u = (i + Random.Shared.NextDouble()) / (imageWidth - 1);
-            var v = (j + Random.Shared.NextDouble()) / (imageHeight - 1);
-            var r = camera.GetRay(u, v);
-            pixelColor += RayColor(r, world, maxDepth);
-        }
-
-        canvas[i, j] = pixelColor;
-    }
-    
-    Console.Error.Write($"\rLines: {Interlocked.Decrement(ref linesRemaining)} ");
-});
-
+// Output
 Console.Error.Write("Writing file... ");
 
 using (var output = Console.OpenStandardOutput())
 {
-    PpmFormat.WriteFile(output, canvas, samplesPerPixel);
+    PpmFormat.WriteFile(output, pixels);
 }
 
 Console.Error.Write("Done.\n");
-
-Vec3 RayColor(Ray r, IHittable world, int depth)
-{
-    if (depth <= 0) return new Vec3(0, 0, 0);
-    
-    var rec = new Hit();
-    if (world.Hit(r, 0.001, double.PositiveInfinity, ref rec))
-    {
-        if (rec.Material.Scatter(r, rec, out var attenuation, out var scattered))
-            return attenuation * RayColor(scattered, world, depth - 1);
-
-        return new Vec3(0, 0, 0);
-    }
-    
-    var unitDirection = Vec3.UnitVector(r.Direction);
-    var t = 0.5 * (unitDirection.Y + 1);
-    return (1 - t) * new Vec3(1, 1, 1) + t * new Vec3(0.5, 0.7, 1);
-}
 
 HittableList RandomScene()
 {

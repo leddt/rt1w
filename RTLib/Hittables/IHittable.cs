@@ -1,4 +1,4 @@
-﻿namespace RTConsole.Hittables;
+﻿namespace RTLib.Hittables;
 
 public interface IHittable
 {

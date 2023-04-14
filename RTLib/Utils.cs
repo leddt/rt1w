@@ -1,4 +1,4 @@
-﻿namespace RTConsole;
+﻿namespace RTLib;
 
 public static class Utils
 {

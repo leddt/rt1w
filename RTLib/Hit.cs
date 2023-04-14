@@ -1,6 +1,6 @@
-﻿using RTConsole.Materials;
+﻿using RTLib.Materials;
 
-namespace RTConsole;
+namespace RTLib;
 
 public struct Hit
 {

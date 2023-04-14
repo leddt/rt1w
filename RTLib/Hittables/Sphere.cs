@@ -1,6 +1,6 @@
-﻿using RTConsole.Materials;
+﻿using RTLib.Materials;
 
-namespace RTConsole.Hittables;
+namespace RTLib.Hittables;
 
 public class Sphere : IHittable
 {
