@@ -18,7 +18,7 @@ var renderSettings = new RenderSettings(
 // Setup scene
 Camera camera;
 IHittable scene;
-switch (2)
+switch (0)
 {
     case 1:
     {
@@ -39,7 +39,6 @@ switch (2)
     }
     
     case 2:
-    default:
     {
         var lookFrom = new Vec3(13, 2, 3);
         var lookAt = new Vec3(0, 0, 0);
@@ -54,6 +53,25 @@ switch (2)
             0, 1);
 
         scene = TwoSpheres();
+        break;
+    }
+
+    case 3:
+    default:
+    {
+        var lookFrom = new Vec3(13, 2, 3);
+        var lookAt = new Vec3(0, 0, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 20,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 10,
+            0, 1);
+
+        scene = TwoPerlinSpheres();
         break;
     }
 }
@@ -136,6 +154,18 @@ IHittable TwoSpheres()
 
     world.Add(new Sphere(new Vec3(0, -10, 0), 10, new Lambertian(checker)));
     world.Add(new Sphere(new Vec3(0, 10, 0), 10, new Lambertian(checker)));
+
+    return world;
+}
+
+IHittable TwoPerlinSpheres()
+{
+    var world = new HittableList();
+
+    var texture = new NoiseTexture();
+
+    world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(texture)));
+    world.Add(new Sphere(new Vec3(0, 2, 0), 2, new Lambertian(texture)));
 
     return world;
 }
