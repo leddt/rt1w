@@ -15,20 +15,48 @@ var renderSettings = new RenderSettings(
     maxDepth: 50
 );
 
-// Camera
-var lookFrom = new Vec3(13, 2, 3);
-var lookAt = new Vec3(0, 0, 0);
-var camera = new Camera(
-    lookFrom, 
-    lookAt, 
-    vUp: new Vec3(0, 1, 0), 
-    vfov: 20, 
-    renderSettings.AspectRatio,
-    aperture: 0.1,
-    focusDist: 10,
-    0, 1);
+// Setup scene
+Camera camera;
+IHittable scene;
+switch (2)
+{
+    case 1:
+    {
+        var lookFrom = new Vec3(13, 2, 3);
+        var lookAt = new Vec3(0, 0, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 20,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 10,
+            0, 1);
 
-var scene = RandomScene();
+        scene = RandomScene();
+        break;
+    }
+    
+    case 2:
+    default:
+    {
+        var lookFrom = new Vec3(13, 2, 3);
+        var lookAt = new Vec3(0, 0, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 20,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 10,
+            0, 1);
+
+        scene = TwoSpheres();
+        break;
+    }
+}
 
 // Render
 Console.Error.WriteLine("Rendering...");
@@ -98,6 +126,18 @@ IHittable RandomScene()
     world.Add(new Sphere(new Vec3(4, 1, 0), 1, new Metal(new Vec3(0.7, 0.6, 0.5), 0)));
 
     return new BvhNode(world, t0, t1);
+}
+
+IHittable TwoSpheres()
+{
+    var world = new HittableList();
+    
+    var checker = new CheckerTexture(new Vec3(0.2, 0.3, 0.1), new Vec3(0.9, 0.9, 0.9));
+
+    world.Add(new Sphere(new Vec3(0, -10, 0), 10, new Lambertian(checker)));
+    world.Add(new Sphere(new Vec3(0, 10, 0), 10, new Lambertian(checker)));
+
+    return world;
 }
 
 Stream GetOutputStream(out IFormat format)
