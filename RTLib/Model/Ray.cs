@@ -1,6 +1,6 @@
 ﻿namespace RTLib.Model;
 
-public struct Ray
+public readonly struct Ray
 {
     public Ray(Vec3 origin, Vec3 direction, double time = 0)
     {

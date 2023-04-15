@@ -1,20 +1,19 @@
 ﻿namespace RTLib;
 
-public struct Vec3
+public readonly struct Vec3
 {
     public Vec3(double x, double y, double z)
     {
         X = x;
         Y = y;
         Z = z;
-
-        LengthSquared = X * X + Y * Y + Z * Z;
     }
 
     public readonly double X;
     public readonly double Y;
     public readonly double Z;
 
+    [Obsolete("Can be pretty slow")]
     public double this[int a]
     {
         get
@@ -30,9 +29,7 @@ public struct Vec3
     }
 
     public double Length => Math.Sqrt(LengthSquared);
-    public readonly double LengthSquared;
-
-    public override string ToString() => $"{X} {Y} {Z}";
+    public double LengthSquared => X * X + Y * Y + Z * Z;
 
     public Vec3 ToRGB(int samplesPerPixel)
     {

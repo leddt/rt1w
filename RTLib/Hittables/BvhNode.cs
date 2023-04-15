@@ -68,16 +68,30 @@ public class BvhNode : IHittable
         return true;
     }
 
-    private int CompareX(IHittable a, IHittable b) => Compare(a, b, 0);
-    private int CompareY(IHittable a, IHittable b) => Compare(a, b, 1);
-    private int CompareZ(IHittable a, IHittable b) => Compare(a, b, 2);
-
-    private int Compare(IHittable a, IHittable b, int axis)
+    private int CompareX(IHittable a, IHittable b)
     {
         if (!a.GetBoundingBox(0, 0, out var boxA) ||
             !b.GetBoundingBox(0, 0, out var boxB))
             throw new Exception("No bounding box in BvhNode comparison.");
 
-        return boxA.Minimum[axis].CompareTo(boxB.Minimum[axis]);
+        return boxA.Minimum.X.CompareTo(boxB.Minimum.X);
+    }
+
+    private int CompareY(IHittable a, IHittable b)
+    {
+        if (!a.GetBoundingBox(0, 0, out var boxA) ||
+            !b.GetBoundingBox(0, 0, out var boxB))
+            throw new Exception("No bounding box in BvhNode comparison.");
+
+        return boxA.Minimum.Y.CompareTo(boxB.Minimum.Y);
+    }
+
+    private int CompareZ(IHittable a, IHittable b)
+    {
+        if (!a.GetBoundingBox(0, 0, out var boxA) ||
+            !b.GetBoundingBox(0, 0, out var boxB))
+            throw new Exception("No bounding box in BvhNode comparison.");
+
+        return boxA.Minimum.Z.CompareTo(boxB.Minimum.Z);
     }
 }
