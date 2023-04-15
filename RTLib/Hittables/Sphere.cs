@@ -40,6 +40,7 @@ public class Sphere : IHittable
         rec.P = r.At(rec.T);
         var outwardNormal = (rec.P - Center) / Radius;
         rec.SetFaceNormal(r, outwardNormal);
+        GetSphereUv(outwardNormal, out rec.U, out rec.V);
         rec.Material = Material;
 
         return true;
@@ -53,5 +54,21 @@ public class Sphere : IHittable
         );
         
         return true;
+    }
+
+    private static void GetSphereUv(Vec3 p, out double u, out double v)
+    {
+        // p: a given point on the sphere of radius one, centered at the origin.
+        // u: returned value [0,1] of angle around the Y axis from X=-1.
+        // v: returned value [0,1] of angle from Y=-1 to Y=+1.
+        //     <1 0 0> yields <0.50 0.50>       <-1  0  0> yields <0.00 0.50>
+        //     <0 1 0> yields <0.50 1.00>       < 0 -1  0> yields <0.50 0.00>
+        //     <0 0 1> yields <0.25 0.50>       < 0  0 -1> yields <0.75 0.50>
+        
+        var theta = Math.Acos(-p.Y);
+        var phi = Math.Atan2(-p.Z, p.X) + Math.PI;
+
+        u = phi / (2 * Math.PI);
+        v = theta / Math.PI;
     }
 }

@@ -1,12 +1,18 @@
 ﻿using RTLib.Model;
+using RTLib.Textures;
 
 namespace RTLib.Materials;
 
 public class Lambertian : IMaterial
 {
-    private readonly Vec3 _albedo;
+    private readonly ITexture _albedo;
 
     public Lambertian(Vec3 albedo)
+    {
+        _albedo = new SolidColor(albedo);
+    }
+
+    public Lambertian(ITexture albedo)
     {
         _albedo = albedo;
     }
@@ -21,7 +27,7 @@ public class Lambertian : IMaterial
             scatterDirection = rec.Normal;
         
         scattered = new Ray(rec.P, scatterDirection, rIn.Time);
-        attenuation = _albedo;
+        attenuation = _albedo.Value(rec.U, rec.V, rec.P);
         return true;
     }
 }
