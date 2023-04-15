@@ -30,4 +30,22 @@ public class HittableList : IHittable
 
         return hitAnything;
     }
+
+    public bool GetBoundingBox(double time0, double time1, out BoundingBox output)
+    {
+        output = new BoundingBox();
+        
+        if (_count == 0)
+            return false;
+
+        var firstBox = true;
+        for (var i = 0; i < _count; i++)
+        {
+            if (!_hittables[i].GetBoundingBox(time0, time1, out var temp)) return false;
+            output = firstBox ? temp : BoundingBox.Surrounding(output, temp);
+            firstBox = false;
+        }
+
+        return true;
+    }
 }

@@ -49,6 +49,21 @@ public class MovingSphere : IHittable
         return true;
     }
 
+    public bool GetBoundingBox(double time0, double time1, out BoundingBox output)
+    {
+        var box0 = new BoundingBox(
+            GetCenter(time0) - new Vec3(_radius, _radius, _radius),
+            GetCenter(time0) + new Vec3(_radius, _radius, _radius)
+        );
+        var box1 = new BoundingBox(
+            GetCenter(time1) - new Vec3(_radius, _radius, _radius),
+            GetCenter(time1) + new Vec3(_radius, _radius, _radius)
+        );
+
+        output = BoundingBox.Surrounding(box0, box1);
+        return true;
+    }
+
     private Vec3 GetCenter(double time)
     {
         return _center0 + (time - _time0) / (_time1 - _time0) * (_center1 - _center0);

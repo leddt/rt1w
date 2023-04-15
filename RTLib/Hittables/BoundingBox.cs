@@ -2,7 +2,7 @@
 
 namespace RTLib.Hittables;
 
-public class BoundingBox
+public struct BoundingBox
 {
     private readonly Vec3 _minimum;
     private readonly Vec3 _maximum;
@@ -44,5 +44,21 @@ public class BoundingBox
         }
 
         return true;
+    }
+
+    public static BoundingBox Surrounding(BoundingBox box0, BoundingBox box1)
+    {
+        var small = new Vec3(
+            Math.Min(box0._minimum.X, box1._minimum.X),
+            Math.Min(box0._minimum.Y, box1._minimum.Y),
+            Math.Min(box0._minimum.Z, box1._minimum.Z)
+        );
+        var big = new Vec3(
+            Math.Max(box0._minimum.X, box1._minimum.X),
+            Math.Max(box0._minimum.Y, box1._minimum.Y),
+            Math.Max(box0._minimum.Z, box1._minimum.Z)
+        );
+
+        return new BoundingBox(small, big);
     }
 }

@@ -44,4 +44,14 @@ public class Sphere : IHittable
 
         return true;
     }
+
+    public bool GetBoundingBox(double time0, double time1, out BoundingBox output)
+    {
+        output = new BoundingBox(
+            Center - new Vec3(Radius, Radius, Radius),
+            Center + new Vec3(Radius, Radius, Radius)
+        );
+        
+        return true;
+    }
 }
