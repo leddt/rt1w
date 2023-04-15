@@ -17,17 +17,28 @@ public class BoundingBox
     {
         for (var a = 0; a < 3; a++)
         {
-            var t0 = Math.Min(
-                (_minimum[a] - r.Origin[a]) / r.Direction[a],
-                (_maximum[a] - r.Origin[a]) / r.Direction[a]
-            );
-            var t1 = Math.Max(
-                (_minimum[a] - r.Origin[a]) / r.Direction[a],
-                (_maximum[a] - r.Origin[a]) / r.Direction[a]
-            );
-
-            tMin = Math.Max(t0, tMin);
-            tMax = Math.Min(t1, tMax);
+            // Original
+            // var t0 = Math.Min(
+            //     (_minimum[a] - r.Origin[a]) / r.Direction[a],
+            //     (_maximum[a] - r.Origin[a]) / r.Direction[a]
+            // );
+            // var t1 = Math.Max(
+            //     (_minimum[a] - r.Origin[a]) / r.Direction[a],
+            //     (_maximum[a] - r.Origin[a]) / r.Direction[a]
+            // );
+            //
+            // tMin = Math.Max(t0, tMin);
+            // tMax = Math.Min(t1, tMax);
+            
+            // Optimized
+            var invD = 1.0 / r.Direction[a];
+            var t0 = (_minimum[a] - r.Origin[a]) * invD;
+            var t1 = (_maximum[a] - r.Origin[a]) * invD;
+            if (invD < 0.0)
+                (t0, t1) = (t1, t0);
+            
+            tMin = t0 > tMin ? t0 : tMin;
+            tMax = t1 < tMax ? t1 : tMax;
 
             if (tMax < tMin) return false;
         }
