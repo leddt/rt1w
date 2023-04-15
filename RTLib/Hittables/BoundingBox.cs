@@ -4,16 +4,16 @@ namespace RTLib.Hittables;
 
 public struct BoundingBox
 {
-    private readonly Vec3 _minimum;
-    private readonly Vec3 _maximum;
+    public readonly Vec3 Minimum;
+    public readonly Vec3 Maximum;
     
     public BoundingBox(Vec3 a, Vec3 b)
     {
-        _minimum = a;
-        _maximum = b;
+        Minimum = a;
+        Maximum = b;
     }
 
-    public bool Hit(Ray r, double tMin, double tMax)
+    public readonly bool Hit(Ray r, double tMin, double tMax)
     {
         for (var a = 0; a < 3; a++)
         {
@@ -32,8 +32,8 @@ public struct BoundingBox
             
             // Optimized
             var invD = 1.0 / r.Direction[a];
-            var t0 = (_minimum[a] - r.Origin[a]) * invD;
-            var t1 = (_maximum[a] - r.Origin[a]) * invD;
+            var t0 = (Minimum[a] - r.Origin[a]) * invD;
+            var t1 = (Maximum[a] - r.Origin[a]) * invD;
             if (invD < 0.0)
                 (t0, t1) = (t1, t0);
             
@@ -49,14 +49,14 @@ public struct BoundingBox
     public static BoundingBox Surrounding(BoundingBox box0, BoundingBox box1)
     {
         var small = new Vec3(
-            Math.Min(box0._minimum.X, box1._minimum.X),
-            Math.Min(box0._minimum.Y, box1._minimum.Y),
-            Math.Min(box0._minimum.Z, box1._minimum.Z)
+            Math.Min(box0.Minimum.X, box1.Minimum.X),
+            Math.Min(box0.Minimum.Y, box1.Minimum.Y),
+            Math.Min(box0.Minimum.Z, box1.Minimum.Z)
         );
         var big = new Vec3(
-            Math.Max(box0._minimum.X, box1._minimum.X),
-            Math.Max(box0._minimum.Y, box1._minimum.Y),
-            Math.Max(box0._minimum.Z, box1._minimum.Z)
+            Math.Max(box0.Minimum.X, box1.Minimum.X),
+            Math.Max(box0.Minimum.Y, box1.Minimum.Y),
+            Math.Max(box0.Minimum.Z, box1.Minimum.Z)
         );
 
         return new BoundingBox(small, big);

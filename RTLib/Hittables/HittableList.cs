@@ -1,4 +1,5 @@
-﻿using RTLib.Model;
+﻿using System.Runtime.InteropServices;
+using RTLib.Model;
 
 namespace RTLib.Hittables;
 
@@ -6,6 +7,7 @@ public class HittableList : IHittable
 {
     private int _count;
     private List<IHittable> _hittables = new();
+    public Span<IHittable> Objects => CollectionsMarshal.AsSpan(_hittables);
 
     public void Add(IHittable hittable)
     {
