@@ -8,6 +8,8 @@ public struct Hit
     public Vec3 Normal;
     public IMaterial Material;
     public double T;
+    public double U;
+    public double V;
     public bool FrontFace;
 
     public void SetFaceNormal(Ray r, Vec3 outwardNormal)
