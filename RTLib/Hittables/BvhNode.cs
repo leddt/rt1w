@@ -27,7 +27,7 @@ public class BvhNode : IHittable
             case 1:
                 Left = Right = objects[0];
                 break;
-            case 2 when comparator(objects[0], objects[1]) <= 0:
+            case 2 when comparator(objects[0], objects[1]) > 0:
                 Left = objects[0];
                 Right = objects[1];
                 break;
@@ -55,10 +55,10 @@ public class BvhNode : IHittable
     public bool Hit(Ray r, double tMin, double tMax, ref Hit rec)
     {
         if (!Box.Hit(r, tMin, tMax)) return false;
-        
+
         var hitLeft = Left.Hit(r, tMin, tMax, ref rec);
         var hitRight = Right.Hit(r, tMin, hitLeft ? rec.T : tMax, ref rec);
-        
+
         return hitLeft || hitRight;
     }
 
