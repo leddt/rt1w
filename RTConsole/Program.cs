@@ -9,8 +9,8 @@ var sw = Stopwatch.StartNew();
 
 var renderSettings = new RenderSettings(
     aspectRatio: 16.0 / 9.0,
-    imageWidth: 400,
-    samplesPerPixel: 100,
+    imageWidth: 600,
+    samplesPerPixel: 200,
     maxDepth: 50
 );
 
