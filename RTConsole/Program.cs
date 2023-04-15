@@ -162,7 +162,7 @@ IHittable TwoPerlinSpheres()
 {
     var world = new HittableList();
 
-    var texture = new NoiseTexture();
+    var texture = new NoiseTexture(4);
 
     world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(texture)));
     world.Add(new Sphere(new Vec3(0, 2, 0), 2, new Lambertian(texture)));
