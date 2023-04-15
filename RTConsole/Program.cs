@@ -277,6 +277,9 @@ HittableList CornellBox()
     world.Add(new RectXZ(0, 555, 0, 555, 555, white));
     world.Add(new RectXY(0, 555, 0, 555, 555, white));
 
+    world.Add(new Box(new Vec3(130, 0, 65), new Vec3(295, 165, 230), white));
+    world.Add(new Box(new Vec3(265, 0, 295), new Vec3(430, 330, 460), white));
+
     return world;
 }
 
