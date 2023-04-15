@@ -28,6 +28,8 @@ public readonly struct Vec3
         }
     }
 
+    public override string ToString() => $"{X} {Y} {Z}";
+
     public double Length => Math.Sqrt(LengthSquared);
     public double LengthSquared => X * X + Y * Y + Z * Z;
 

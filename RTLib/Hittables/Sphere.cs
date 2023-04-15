@@ -31,7 +31,7 @@ public class Sphere : IHittable
         var root = (-halfB - sqrtD) / a;
         if (root < tMin || tMax < root)
         {
-            root = (-halfB - sqrtD) / a;
+            root = (-halfB + sqrtD) / a;
             if (root < tMin || tMax < root)
                 return false;
         }
