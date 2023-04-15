@@ -13,7 +13,7 @@ var commandLine = Environment.GetCommandLineArgs();
 var renderSettings = new RenderSettings(
     aspectRatio: 1, // 16.0 / 9.0,
     imageWidth: 600,
-    samplesPerPixel: 100,
+    samplesPerPixel: 400,
     maxDepth: 50
 );
 
@@ -123,7 +123,6 @@ switch (sceneIndex)
     }
     
     case 6:
-    default:
     {
         var lookFrom = new Vec3(278, 278, -800);
         var lookAt = new Vec3(278, 278, 0);
@@ -138,6 +137,26 @@ switch (sceneIndex)
             0, 1);
 
         scene = CornellBox();
+        background = new Vec3(0, 0, 0);
+        break;
+    }
+    
+    case 7:
+    default:
+    {
+        var lookFrom = new Vec3(278, 278, -800);
+        var lookAt = new Vec3(278, 278, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 40,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 600,
+            0, 1);
+
+        scene = CornellSmoke();
         background = new Vec3(0, 0, 0);
         break;
     }
@@ -261,21 +280,30 @@ IHittable SimpleLight()
     return world;
 }
 
-HittableList CornellBox()
+HittableList EmptyCornellBox()
 {
-    var world = new HittableList();
+    var objects = new HittableList();
 
     var red = new Lambertian(new Vec3(.65, .05, .05));
     var white = new Lambertian(new Vec3(.73, .73, .73));
     var green = new Lambertian(new Vec3(.13, .45, .15));
-    var light = new DiffuseLight(new Vec3(15, 15, 15));
+    var light = new DiffuseLight(new Vec3(7, 7, 7));
 
-    world.Add(new RectYZ(0, 555, 0, 555, 555, green));
-    world.Add(new RectYZ(0, 555, 0, 555, 0, red));
-    world.Add(new RectXZ(213, 343, 227, 332, 554, light));
-    world.Add(new RectXZ(0, 555, 0, 555, 0, white));
-    world.Add(new RectXZ(0, 555, 0, 555, 555, white));
-    world.Add(new RectXY(0, 555, 0, 555, 555, white));
+    objects.Add(new RectYZ(0, 555, 0, 555, 555, green));
+    objects.Add(new RectYZ(0, 555, 0, 555, 0, red));
+    objects.Add(new RectXZ(113, 443, 127, 432, 554, light));
+    objects.Add(new RectXZ(0, 555, 0, 555, 0, white));
+    objects.Add(new RectXZ(0, 555, 0, 555, 555, white));
+    objects.Add(new RectXY(0, 555, 0, 555, 555, white));
+    
+    return objects;
+}
+
+IHittable CornellBox()
+{
+    var world = EmptyCornellBox();
+    
+    var white = new Lambertian(new Vec3(.73, .73, .73));
 
     world.Add(new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white)
         .RotateY(15)
@@ -286,6 +314,26 @@ HittableList CornellBox()
         .RotateY(-18)
         .Translate(130, 0, 65)
     );
+
+    return world;
+}
+
+IHittable CornellSmoke()
+{
+    var world = EmptyCornellBox();
+    
+    var white = new Lambertian(new Vec3(.73, .73, .73));
+
+    var box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white)
+        .RotateY(15)
+        .Translate(265, 0, 295);
+
+    var box2 = new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white)
+        .RotateY(-18)
+        .Translate(130, 0, 65);
+
+    world.Add(new ConstantMedium(box1, 0.01, new Vec3(0, 0, 0)));
+    world.Add(new ConstantMedium(box2, 0.01, new Vec3(1, 1, 1)));
 
     return world;
 }
