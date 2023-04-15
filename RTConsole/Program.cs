@@ -4,6 +4,7 @@ using RTLib.Formats;
 using RTLib.Hittables;
 using RTLib.Materials;
 using RTLib.Model;
+using RTLib.Textures;
 
 var sw = Stopwatch.StartNew();
 
@@ -50,7 +51,8 @@ IHittable RandomScene()
     
     var world = new HittableList();
 
-    var groundMaterial = new Lambertian(new Vec3(0.5, 0.5, 0.5));
+    var checker = new CheckerTexture(new Vec3(0.2, 0.3, 0.1), new Vec3(0.9, 0.9, 0.9));
+    var groundMaterial = new Lambertian(checker);
     world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, groundMaterial));
 
     var rng = Random.Shared;
