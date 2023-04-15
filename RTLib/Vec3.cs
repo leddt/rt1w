@@ -15,6 +15,20 @@ public struct Vec3
     public readonly double Y;
     public readonly double Z;
 
+    public double this[int a]
+    {
+        get
+        {
+            return a switch
+            {
+                0 => X,
+                1 => Y,
+                2 => Z,
+                _ => throw new IndexOutOfRangeException()
+            };
+        }
+    }
+
     public double Length => Math.Sqrt(LengthSquared);
     public readonly double LengthSquared;
 
