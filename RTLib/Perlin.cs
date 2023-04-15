@@ -21,11 +21,45 @@ public class Perlin
 
     public double Noise(Vec3 p)
     {
-        var i = (int)(4 * p.X) & 255;
-        var j = (int)(4 * p.Y) & 255;
-        var k = (int)(4 * p.Z) & 255;
+        var u = p.X - Math.Floor(p.X);
+        var v = p.Y - Math.Floor(p.Y);
+        var w = p.Z - Math.Floor(p.Z);
 
-        return _ranfloat[_permX[i] ^ _permY[j] ^ _permZ[k]];
+        var i = (int)Math.Floor(p.X);
+        var j = (int)Math.Floor(p.Y);
+        var k = (int)Math.Floor(p.Z);
+
+        var c = new double[2, 2, 2];
+        
+        for (var di = 0; di < 2; di++)
+        for (var dj = 0; dj < 2; dj++)
+        for (var dk = 0; dk < 2; dk++)
+        {
+            c[di, dj, dk] = _ranfloat[
+                _permX[(i + di) & 255] ^
+                _permY[(j + dj) & 255] ^
+                _permZ[(k + dk) & 255]
+            ];
+        }
+
+        return TrilinearInterpolation(c, u, v, w);
+    }
+
+    private static double TrilinearInterpolation(double[,,] c, double u, double v, double w)
+    {
+        var accum = 0.0;
+        
+        for (var i = 0; i<2;i++)
+        for (var j = 0; j<2;j++)
+        for (var k = 0; k < 2; k++)
+        {
+            accum += (i * u + (1 - i) * (1 - u)) *
+                     (j * v + (1 - j) * (1 - v)) *
+                     (k * w + (1 - k) * (1 - w)) *
+                     c[i, j, k];
+        }
+
+        return accum;
     }
 
     private static int[] GeneratePerm()
