@@ -13,7 +13,7 @@ var commandLine = Environment.GetCommandLineArgs();
 var renderSettings = new RenderSettings(
     aspectRatio: 16.0 / 9.0,
     imageWidth: 600,
-    samplesPerPixel: 200,
+    samplesPerPixel: 400,
     maxDepth: 50
 );
 
@@ -106,8 +106,8 @@ switch (sceneIndex)
     case 5:
     default:
     {
-        var lookFrom = new Vec3(13, 2, 3);
-        var lookAt = new Vec3(0, 0, 0);
+        var lookFrom = new Vec3(26, 3, 6);
+        var lookAt = new Vec3(0, 2, 0);
         camera = new Camera(
             lookFrom,
             lookAt,
@@ -115,10 +115,10 @@ switch (sceneIndex)
             vfov: 20,
             renderSettings.AspectRatio,
             aperture: 0.1,
-            focusDist: 10,
+            focusDist: 20,
             0, 1);
 
-        scene = new HittableList();
+        scene = SimpleLight();
         background = new Vec3(0, 0, 0);
         break;
     }
@@ -225,6 +225,21 @@ IHittable Earth()
     var globe = new Sphere(new Vec3(0, 0, 0), 2, earthSurface);
 
     return globe;
+}
+
+IHittable SimpleLight()
+{
+    var world = new HittableList();
+    
+    var texture = new NoiseTexture(4);
+    world.Add(new Sphere(new Vec3(0, -1000, 0), 1000, new Lambertian(texture)));
+    world.Add(new Sphere(new Vec3(0, 2, 0), 2, new Lambertian(texture)));
+
+    var diffLight = new DiffuseLight(new Vec3(4, 4, 4));
+    world.Add(new RectXY(3, 5, 1, 3, -2, diffLight));
+    world.Add(new Sphere(new Vec3(0, 7, 0), 2, diffLight));
+
+    return world;
 }
 
 Stream GetOutputStream(out IFormat format)
