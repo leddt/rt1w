@@ -277,15 +277,15 @@ HittableList CornellBox()
     world.Add(new RectXZ(0, 555, 0, 555, 555, white));
     world.Add(new RectXY(0, 555, 0, 555, 555, white));
 
-    IHittable box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white);
-    box1 = new RotateY(box1, 15);
-    box1 = new Translate(box1, new Vec3(265, 0, 295));
-    world.Add(box1);
+    world.Add(new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white)
+        .RotateY(15)
+        .Translate(265, 0, 295)
+    );
 
-    IHittable box2 = new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white);
-    box2 = new RotateY(box2, -18);
-    box2 = new Translate(box2, new Vec3(130, 0, 65));
-    world.Add(box2);
+    world.Add(new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white)
+        .RotateY(-18)
+        .Translate(130, 0, 65)
+    );
 
     return world;
 }
