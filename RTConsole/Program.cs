@@ -8,6 +8,8 @@ using RTLib.Textures;
 
 var sw = Stopwatch.StartNew();
 
+var commandLine = Environment.GetCommandLineArgs();
+
 var renderSettings = new RenderSettings(
     aspectRatio: 16.0 / 9.0,
     imageWidth: 600,
@@ -16,9 +18,12 @@ var renderSettings = new RenderSettings(
 );
 
 // Setup scene
+if (commandLine.Length < 3 || !int.TryParse(commandLine[2], out var sceneIndex))
+    sceneIndex = 0;
+
 Camera camera;
 IHittable scene;
-switch (0)
+switch (sceneIndex)
 {
     case 1:
     {
@@ -57,7 +62,6 @@ switch (0)
     }
 
     case 3:
-    default:
     {
         var lookFrom = new Vec3(13, 2, 3);
         var lookAt = new Vec3(0, 0, 0);
@@ -72,6 +76,25 @@ switch (0)
             0, 1);
 
         scene = TwoPerlinSpheres();
+        break;
+    }
+    
+    case 4:
+    default:
+    {
+        var lookFrom = new Vec3(13, 2, 3);
+        var lookAt = new Vec3(0, 0, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 20,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 10,
+            0, 1);
+
+        scene = Earth();
         break;
     }
 }
@@ -170,9 +193,17 @@ IHittable TwoPerlinSpheres()
     return world;
 }
 
+IHittable Earth()
+{
+    var earthTexture = new ImageTexture("Textures/earthmap.jpg");
+    var earthSurface = new Lambertian(earthTexture);
+    var globe = new Sphere(new Vec3(0, 0, 0), 2, earthSurface);
+
+    return globe;
+}
+
 Stream GetOutputStream(out IFormat format)
 {
-    var commandLine = Environment.GetCommandLineArgs();
     if (commandLine.Length >= 2)
     {
         var targetFileName = Environment.GetCommandLineArgs()[1];

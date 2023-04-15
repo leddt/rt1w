@@ -11,4 +11,10 @@
       <ProjectReference Include="..\RTLib\RTLib.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Textures\*.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>
