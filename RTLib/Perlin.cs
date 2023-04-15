@@ -25,6 +25,10 @@ public class Perlin
         var v = p.Y - Math.Floor(p.Y);
         var w = p.Z - Math.Floor(p.Z);
 
+        u = u * u * (3 - 2 * u);
+        v = v * v * (3 - 2 * v);
+        w = w * w * (3 - 2 * w);
+
         var i = (int)Math.Floor(p.X);
         var j = (int)Math.Floor(p.Y);
         var k = (int)Math.Floor(p.Z);
