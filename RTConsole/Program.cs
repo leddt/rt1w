@@ -13,7 +13,7 @@ var commandLine = Environment.GetCommandLineArgs();
 var renderSettings = new RenderSettings(
     aspectRatio: 1, // 16.0 / 9.0,
     imageWidth: 600,
-    samplesPerPixel: 400,
+    samplesPerPixel: 100,
     maxDepth: 50
 );
 
