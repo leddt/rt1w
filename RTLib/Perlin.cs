@@ -45,6 +45,22 @@ public class Perlin
         return PerlinInterpolation(c, u, v, w);
     }
 
+    public double Turbulence(Vec3 p, int depth = 7)
+    {
+        var accum = 0.0;
+        var tempP = p;
+        var weight = 1.0;
+
+        for (var i = 0; i < depth; i++)
+        {
+            accum += weight * Noise(tempP);
+            weight *= 0.5;
+            tempP *= 2;
+        }
+
+        return Math.Abs(accum);
+    }
+
     private static double TrilinearInterpolation(double[,,] c, double u, double v, double w)
     {
         var accum = 0.0;
