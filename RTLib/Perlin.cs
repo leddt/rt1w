@@ -3,16 +3,16 @@
 public class Perlin
 {
     private const int PointCount = 256;
-    private readonly double[] _ranfloat;
+    private readonly Vec3[] _ranvec;
     private readonly int[] _permX;
     private readonly int[] _permY;
     private readonly int[] _permZ;
 
     public Perlin()
     {
-        _ranfloat = new double[PointCount];
+        _ranvec = new Vec3[PointCount];
         for (var i = 0; i < PointCount; i++)
-            _ranfloat[i] = Random.Shared.NextDouble();
+            _ranvec[i] = Vec3.UnitVector(Vec3.Random(-1, 1));
 
         _permX = GeneratePerm();
         _permY = GeneratePerm();
@@ -25,28 +25,24 @@ public class Perlin
         var v = p.Y - Math.Floor(p.Y);
         var w = p.Z - Math.Floor(p.Z);
 
-        u = u * u * (3 - 2 * u);
-        v = v * v * (3 - 2 * v);
-        w = w * w * (3 - 2 * w);
-
         var i = (int)Math.Floor(p.X);
         var j = (int)Math.Floor(p.Y);
         var k = (int)Math.Floor(p.Z);
 
-        var c = new double[2, 2, 2];
+        var c = new Vec3[2, 2, 2];
         
         for (var di = 0; di < 2; di++)
         for (var dj = 0; dj < 2; dj++)
         for (var dk = 0; dk < 2; dk++)
         {
-            c[di, dj, dk] = _ranfloat[
+            c[di, dj, dk] = _ranvec[
                 _permX[(i + di) & 255] ^
                 _permY[(j + dj) & 255] ^
                 _permZ[(k + dk) & 255]
             ];
         }
 
-        return TrilinearInterpolation(c, u, v, w);
+        return PerlinInterpolation(c, u, v, w);
     }
 
     private static double TrilinearInterpolation(double[,,] c, double u, double v, double w)
@@ -61,6 +57,27 @@ public class Perlin
                      (j * v + (1 - j) * (1 - v)) *
                      (k * w + (1 - k) * (1 - w)) *
                      c[i, j, k];
+        }
+
+        return accum;
+    }
+
+    private static double PerlinInterpolation(Vec3[,,] c, double u, double v, double w)
+    {
+        var uu = u * u * (3 - 2 * u);
+        var vv = v * v * (3 - 2 * v);
+        var ww = w * w * (3 - 2 * w);
+        var accum = 0.0;
+        
+        for (var i = 0; i<2;i++)
+        for (var j = 0; j<2;j++)
+        for (var k = 0; k < 2; k++)
+        {
+            var weightV = new Vec3(u - i, v - j, w - k);
+            accum += (i * uu + (1 - i) * (1 - uu)) *
+                     (j * vv + (1 - j) * (1 - vv)) *
+                     (k * ww + (1 - k) * (1 - ww)) *
+                     Vec3.Dot(c[i, j, k], weightV);
         }
 
         return accum;
