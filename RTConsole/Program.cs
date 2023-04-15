@@ -11,7 +11,7 @@ var sw = Stopwatch.StartNew();
 var commandLine = Environment.GetCommandLineArgs();
 
 var renderSettings = new RenderSettings(
-    aspectRatio: 16.0 / 9.0,
+    aspectRatio: 1, // 16.0 / 9.0,
     imageWidth: 600,
     samplesPerPixel: 400,
     maxDepth: 50
@@ -104,7 +104,6 @@ switch (sceneIndex)
     }
     
     case 5:
-    default:
     {
         var lookFrom = new Vec3(26, 3, 6);
         var lookAt = new Vec3(0, 2, 0);
@@ -119,6 +118,26 @@ switch (sceneIndex)
             0, 1);
 
         scene = SimpleLight();
+        background = new Vec3(0, 0, 0);
+        break;
+    }
+    
+    case 6:
+    default:
+    {
+        var lookFrom = new Vec3(278, 278, -800);
+        var lookAt = new Vec3(278, 278, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 40,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 600,
+            0, 1);
+
+        scene = CornellBox();
         background = new Vec3(0, 0, 0);
         break;
     }
@@ -238,6 +257,25 @@ IHittable SimpleLight()
     var diffLight = new DiffuseLight(new Vec3(4, 4, 4));
     world.Add(new RectXY(3, 5, 1, 3, -2, diffLight));
     world.Add(new Sphere(new Vec3(0, 7, 0), 2, diffLight));
+
+    return world;
+}
+
+HittableList CornellBox()
+{
+    var world = new HittableList();
+
+    var red = new Lambertian(new Vec3(.65, .05, .05));
+    var white = new Lambertian(new Vec3(.73, .73, .73));
+    var green = new Lambertian(new Vec3(.13, .45, .15));
+    var light = new DiffuseLight(new Vec3(15, 15, 15));
+
+    world.Add(new RectYZ(0, 555, 0, 555, 555, green));
+    world.Add(new RectYZ(0, 555, 0, 555, 0, red));
+    world.Add(new RectXZ(213, 343, 227, 332, 554, light));
+    world.Add(new RectXZ(0, 555, 0, 555, 0, white));
+    world.Add(new RectXZ(0, 555, 0, 555, 555, white));
+    world.Add(new RectXY(0, 555, 0, 555, 555, white));
 
     return world;
 }
