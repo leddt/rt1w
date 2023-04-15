@@ -23,6 +23,8 @@ if (commandLine.Length < 3 || !int.TryParse(commandLine[2], out var sceneIndex))
 
 Camera camera;
 IHittable scene;
+Vec3 background;
+
 switch (sceneIndex)
 {
     case 1:
@@ -40,6 +42,7 @@ switch (sceneIndex)
             0, 1);
 
         scene = RandomScene();
+        background = new Vec3(0.7, 0.8, 1);
         break;
     }
     
@@ -58,6 +61,7 @@ switch (sceneIndex)
             0, 1);
 
         scene = TwoSpheres();
+        background = new Vec3(0.7, 0.8, 1);
         break;
     }
 
@@ -76,11 +80,11 @@ switch (sceneIndex)
             0, 1);
 
         scene = TwoPerlinSpheres();
+        background = new Vec3(0.7, 0.8, 1);
         break;
     }
     
     case 4:
-    default:
     {
         var lookFrom = new Vec3(13, 2, 3);
         var lookAt = new Vec3(0, 0, 0);
@@ -95,6 +99,27 @@ switch (sceneIndex)
             0, 1);
 
         scene = Earth();
+        background = new Vec3(0.7, 0.8, 1);
+        break;
+    }
+    
+    case 5:
+    default:
+    {
+        var lookFrom = new Vec3(13, 2, 3);
+        var lookAt = new Vec3(0, 0, 0);
+        camera = new Camera(
+            lookFrom,
+            lookAt,
+            vUp: new Vec3(0, 1, 0),
+            vfov: 20,
+            renderSettings.AspectRatio,
+            aperture: 0.1,
+            focusDist: 10,
+            0, 1);
+
+        scene = new HittableList();
+        background = new Vec3(0, 0, 0);
         break;
     }
 }
@@ -102,7 +127,7 @@ switch (sceneIndex)
 // Render
 Console.Error.WriteLine("Rendering...");
 var renderer = new ParallelRenderer(renderSettings);
-var pixels = renderer.RenderScene(scene, camera, Console.Error.Write);
+var pixels = renderer.RenderScene(background, scene, camera, Console.Error.Write);
 
 // Output
 Console.Error.Write("Writing file... ");

@@ -12,7 +12,7 @@ public class ParallelRenderer
         _settings = settings;
     }
 
-    public Vec3[,] RenderScene(IHittable scene, Camera camera, Action<string>? log)
+    public Vec3[,] RenderScene(Vec3 background, IHittable scene, Camera camera, Action<string>? log)
     {
         log ??= _ => { };
         
@@ -30,7 +30,7 @@ public class ParallelRenderer
                     var u = (i + Random.Shared.NextDouble()) / (_settings.ImageWidth - 1);
                     var v = (j + Random.Shared.NextDouble()) / (_settings.ImageHeight - 1);
                     var r = camera.GetRay(u, v);
-                    pixelColor += RayColor(r, scene, _settings.MaxDepth);
+                    pixelColor += RayColor(r, background, scene, _settings.MaxDepth);
                 }
 
                 canvas[i, j] = pixelColor.ToRGB(_settings.SamplesPerPixel);
@@ -42,22 +42,20 @@ public class ParallelRenderer
         return canvas;
     }
     
-    private Vec3 RayColor(Ray r, IHittable scene, int depth)
+    private Vec3 RayColor(Ray r, Vec3 background, IHittable scene, int depth)
     {
         if (depth <= 0) return new Vec3(0, 0, 0);
-    
+        
         var rec = new Hit();
-        if (scene.Hit(r, 0.001, double.PositiveInfinity, ref rec))
-        {
-            if (rec.Material.Scatter(r, rec, out var attenuation, out var scattered))
-                return attenuation * RayColor(scattered, scene, depth - 1);
+        if (!scene.Hit(r, 0.001, double.PositiveInfinity, ref rec))
+            return background;
 
-            return new Vec3(0, 0, 0);
-        }
-    
-        var unitDirection = Vec3.UnitVector(r.Direction);
-        var t = 0.5 * (unitDirection.Y + 1);
-        return (1 - t) * new Vec3(1, 1, 1) + t * new Vec3(0.5, 0.7, 1);
+        var emitted = rec.Material.Emitted(rec.U, rec.V, rec.P);
+
+        if (!rec.Material.Scatter(r, rec, out var attenuation, out var scattered))
+            return emitted;
+
+        return emitted + attenuation * RayColor(scattered, background, scene, depth - 1);
     }
 }
 
