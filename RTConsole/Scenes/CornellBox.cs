@@ -11,8 +11,8 @@ public class CornellBox : IScene
 
     public RenderSettings GetRenderSettings() => new(
         aspectRatio: 1,
-        imageWidth: 800,
-        samplesPerPixel: 500,
+        imageWidth: 600,
+        samplesPerPixel: 200,
         maxDepth: 50
     );
 
@@ -22,8 +22,8 @@ public class CornellBox : IScene
         vUp: new Vec3(0, 1, 0),
         vfov: 40,
         GetRenderSettings().AspectRatio,
-        aperture: 0.1,
-        focusDist: 600,
+        aperture: 0.0,
+        focusDist: 800,
         time0: 0, time1: 1
     );
 
@@ -33,12 +33,12 @@ public class CornellBox : IScene
 
         var red = new Lambertian(new Vec3(.65, .05, .05));
         var white = new Lambertian(new Vec3(.73, .73, .73));
-        var green = new Lambertian(new Vec3(.13, .45, .15));
-        var light = new DiffuseLight(new Vec3(7, 7, 7));
+        var green = new Lambertian(new Vec3(.12, .45, .15));
+        var light = new DiffuseLight(new Vec3(15, 15, 15));
 
         world.Add(new RectYZ(0, 555, 0, 555, 555, green));
         world.Add(new RectYZ(0, 555, 0, 555, 0, red));
-        world.Add(new RectXZ(113, 443, 127, 432, 554, light));
+        world.Add(new RectXZ(213, 343, 227, 332, 554, light));
         world.Add(new RectXZ(0, 555, 0, 555, 0, white));
         world.Add(new RectXZ(0, 555, 0, 555, 555, white));
         world.Add(new RectXY(0, 555, 0, 555, 555, white));
