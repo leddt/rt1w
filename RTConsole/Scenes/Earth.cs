@@ -1,41 +1,22 @@
 ﻿using RTLib;
 using RTLib.Hittables;
 using RTLib.Materials;
-using RTLib.Model;
 using RTLib.Textures;
 
 namespace RTConsole.Scenes;
 
-public class Earth : IScene
+public class Earth : BaseScene
 {
-    public Vec3 GetBackground() => new(0.7, 0.8, 1);
-
-    public RenderSettings GetRenderSettings() => new(
-        aspectRatio: 1,
-        imageWidth: 800,
-        samplesPerPixel: 500,
-        maxDepth: 50
-    );
-
-    public Camera GetCamera()
-    {
-        return new Camera(
-            lookFrom: new Vec3(13, 2, 3),
-            lookAt: Vec3.Zero,
-            vUp: new Vec3(0, 1, 0),
-            vfov: 20,
-            GetRenderSettings().AspectRatio,
-            aperture: 0.1,
-            focusDist: 10,
-            time0: 0, time1: 1);
-    }
-
-    public IHittable GetWorld()
+    public override Vec3 GetBackground() => new(0.7, 0.8, 1);
+    protected override double AspectRatio => 1;
+    protected override double VerticalFov => 20;
+    protected override Vec3 LookFrom => new (13, 2, 3);
+    protected override Vec3 LookAt => Vec3.Zero;
+    
+    protected override IEnumerable<IHittable> GetSceneObjects()
     {
         var earthTexture = new ImageTexture("Textures/earthmap.jpg");
         var earthSurface = new Lambertian(earthTexture);
-        var globe = new Sphere(Vec3.Zero, 2, earthSurface);
-
-        return globe;
+        yield return new Sphere(Vec3.Zero, 2, earthSurface);
     }
 }

@@ -4,9 +4,9 @@ namespace RTLib.Hittables;
 
 public class BvhNode : IHittable
 {
-    public readonly BoundingBox Box;
-    public readonly IHittable Left;
-    public readonly IHittable Right;
+    private readonly BoundingBox _box;
+    private readonly IHittable _left;
+    private readonly IHittable _right;
     
     public BvhNode(HittableList list, double time0, double time1) : this(list.Objects, time0, time1)
     {
@@ -25,46 +25,46 @@ public class BvhNode : IHittable
         switch (objects.Length)
         {
             case 1:
-                Left = Right = objects[0];
+                _left = _right = objects[0];
                 break;
             case 2 when comparator(objects[0], objects[1]) > 0:
-                Left = objects[0];
-                Right = objects[1];
+                _left = objects[0];
+                _right = objects[1];
                 break;
             case 2:
-                Left = objects[1];
-                Right = objects[0];
+                _left = objects[1];
+                _right = objects[0];
                 break;
             default:
             {
                 objects.Sort(comparator);
                 var mid = objects.Length / 2;
-                Left = new BvhNode(objects.Slice(0, mid), time0, time1);
-                Right = new BvhNode(objects.Slice(mid), time0, time1);
+                _left = new BvhNode(objects.Slice(0, mid), time0, time1);
+                _right = new BvhNode(objects.Slice(mid), time0, time1);
                 break;
             }
         }
 
-        if (!Left.GetBoundingBox(time0, time1, out var boxLeft) ||
-            !Right.GetBoundingBox(time0, time1, out var boxRight))
+        if (!_left.GetBoundingBox(time0, time1, out var boxLeft) ||
+            !_right.GetBoundingBox(time0, time1, out var boxRight))
             throw new Exception("No bounding box in BvhNode constructor.");
 
-        Box = BoundingBox.Surrounding(boxLeft, boxRight);
+        _box = BoundingBox.Surrounding(boxLeft, boxRight);
     }
 
     public bool Hit(Ray r, double tMin, double tMax, ref Hit rec)
     {
-        if (!Box.Hit(r, tMin, tMax)) return false;
+        if (!_box.Hit(r, tMin, tMax)) return false;
 
-        var hitLeft = Left.Hit(r, tMin, tMax, ref rec);
-        var hitRight = Right.Hit(r, tMin, hitLeft ? rec.T : tMax, ref rec);
+        var hitLeft = _left.Hit(r, tMin, tMax, ref rec);
+        var hitRight = _right.Hit(r, tMin, hitLeft ? rec.T : tMax, ref rec);
 
         return hitLeft || hitRight;
     }
 
     public bool GetBoundingBox(double time0, double time1, out BoundingBox output)
     {
-        output = Box;
+        output = _box;
         return true;
     }
 
