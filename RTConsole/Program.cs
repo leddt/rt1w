@@ -5,21 +5,18 @@ using RTLib.Formats;
 
 var sw = Stopwatch.StartNew();
 var commandLine = Environment.GetCommandLineArgs();
+var incremental = true;
 
 // Setup scene
 var scene = GetScene();
 
 // Render
 Console.Error.WriteLine("Rendering...");
-var renderer = new ParallelRenderer(scene.GetRenderSettings());
-var pixels = renderer.RenderScene(scene.GetBackground(), scene.GetWorld(), scene.GetCamera(), Console.Error.Write);
 
-// Output
-Console.Error.Write("Writing file... ");
-using (var outputStream = GetOutputStream(out var format))
-{
-    format.WriteFile(outputStream, pixels);
-}
+if (incremental)
+    RenderWithIncrementalRenderer(scene);
+else
+    RenderWithParallelRenderer(scene);
 
 Console.Error.Write($"Done ({sw.Elapsed})\n");
 
@@ -59,4 +56,32 @@ Stream GetOutputStream(out IFormat format)
 
     format = new PpmFormat();
     return Console.OpenStandardOutput();
+}
+
+void RenderWithParallelRenderer(IScene s)
+{
+    var renderer = new ParallelRenderer(s.GetRenderSettings());
+    var pixels = renderer.RenderScene(s.GetBackground(), s.GetWorld(), s.GetCamera(), Console.Error.Write);
+
+    // Output
+    Console.Error.Write("Writing file... ");
+    using var outputStream = GetOutputStream(out var format);
+    format.WriteFile(outputStream, pixels);
+}
+
+void RenderWithIncrementalRenderer(IScene s)
+{
+    var renderer = new IncrementalRenderer(s.GetRenderSettings());
+    renderer.RenderScene(
+        s.GetBackground(),
+        s.GetWorld(),
+        s.GetCamera(), 
+        WriteFrame,
+        Console.Error.Write);
+
+    void WriteFrame(Vec3[,] pixels)
+    {
+        using var outputStream = GetOutputStream(out var format);
+        format.WriteFile(outputStream, pixels);
+    }
 }
