@@ -16,7 +16,7 @@ public class Dielectric : IMaterial
         attenuation = new Vec3(1, 1, 1);
         var refractionRatio = rec.FrontFace ? 1.0 / _ir : _ir;
 
-        var unitDirection = Vec3.UnitVector(rIn.Direction);
+        var unitDirection = rIn.Direction.UnitVector();
         var cosTheta = Math.Min(Vec3.Dot(-unitDirection, rec.Normal), 1.0);
         var sinTheta = Math.Sqrt(1 - cosTheta * cosTheta);
 
@@ -24,9 +24,9 @@ public class Dielectric : IMaterial
 
         Vec3 direction;
         if (cannotRefract || Reflectance(cosTheta, refractionRatio) > Random.Shared.NextDouble())
-            direction = Vec3.Reflect(unitDirection, rec.Normal);
+            direction = unitDirection.Reflect(rec.Normal);
         else
-            direction = Vec3.Refract(unitDirection, rec.Normal, refractionRatio);
+            direction = unitDirection.Refract(rec.Normal, refractionRatio);
 
         scattered = new Ray(rec.P, direction, rIn.Time);
         return true;

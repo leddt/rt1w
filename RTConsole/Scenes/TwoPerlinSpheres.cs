@@ -19,7 +19,7 @@ public class TwoPerlinSpheres : IScene
 
     public Camera GetCamera() => new(
         lookFrom: new Vec3(13, 2, 3),
-        lookAt: new Vec3(0, 0, 0),
+        lookAt: Vec3.Zero,
         vUp: new Vec3(0, 1, 0),
         vfov: 20,
         GetRenderSettings().AspectRatio,

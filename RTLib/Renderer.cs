@@ -15,7 +15,7 @@ public abstract class Renderer
 
     private static Vec3 RayColor(Ray r, Vec3 background, IHittable scene, int depth)
     {
-        if (depth <= 0) return new Vec3(0, 0, 0);
+        if (depth <= 0) return Vec3.Zero;
         
         var rec = new Hit();
         if (!scene.Hit(r, 0.001, double.PositiveInfinity, ref rec))

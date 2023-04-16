@@ -42,7 +42,7 @@ public class IncrementalRenderer : Renderer
         for (var x = 0; x < Settings.ImageWidth; x++)
         for (var y = 0; y < Settings.ImageHeight; y++)
         {
-            result[x, y] = canvas[x, y].ToRGB(samples);
+            result[x, y] = canvas[x, y].ToRgb(samples);
         }
         
         return result;

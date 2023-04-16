@@ -12,7 +12,7 @@ public class Perlin
     {
         _ranvec = new Vec3[PointCount];
         for (var i = 0; i < PointCount; i++)
-            _ranvec[i] = Vec3.UnitVector(Vec3.Random(-1, 1));
+            _ranvec[i] = Vec3.Random(-1, 1).UnitVector();
 
         _permX = GeneratePerm();
         _permY = GeneratePerm();

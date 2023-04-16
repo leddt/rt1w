@@ -20,14 +20,14 @@ public class ParallelRenderer : Renderer
         {
             for (var i = 0; i < Settings.ImageWidth; i++)
             {
-                var pixelColor = new Vec3(0, 0, 0);
+                var pixelColor = Vec3.Zero;
 
                 for (var s = 0; s < Settings.SamplesPerPixel; s++)
                 {
                     pixelColor += GetSample(background, scene, camera, i, j);
                 }
 
-                canvas[i, j] = pixelColor.ToRGB(Settings.SamplesPerPixel);
+                canvas[i, j] = pixelColor.ToRgb(Settings.SamplesPerPixel);
             }
     
             log($"\rLines: {Interlocked.Decrement(ref linesRemaining)} ");

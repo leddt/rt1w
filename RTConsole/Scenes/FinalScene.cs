@@ -65,7 +65,7 @@ public class FinalScene : IScene
         var boundary = new Sphere(new Vec3(360, 150, 145), 70, new Dielectric(1.5));
         objects.Add(boundary);
         objects.Add(new ConstantMedium(boundary, 0.2, new Vec3(0.2, 0.4, 0.9)));
-        boundary = new Sphere(new Vec3(0, 0, 0), 5000, new Dielectric(1.5));
+        boundary = new Sphere(Vec3.Zero, 5000, new Dielectric(1.5));
         objects.Add(new ConstantMedium(boundary, .0001, new Vec3(1, 1, 1)));
 
         var emat = new Lambertian(new ImageTexture("Textures/earthmap.jpg"));

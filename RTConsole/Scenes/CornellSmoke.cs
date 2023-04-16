@@ -42,12 +42,12 @@ public class CornellSmoke : IScene
         world.Add(new RectXZ(0, 555, 0, 555, 555, white));
         world.Add(new RectXY(0, 555, 0, 555, 555, white));
     
-        var box1 = new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white)
+        var box1 = new Box(Vec3.Zero, new Vec3(165, 330, 165), white)
             .RotateY(15)
             .Translate(265, 0, 295);
-        world.Add(new ConstantMedium(box1, 0.01, new Vec3(0, 0, 0)));
+        world.Add(new ConstantMedium(box1, 0.01, Vec3.Zero));
 
-        var box2 = new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white)
+        var box2 = new Box(Vec3.Zero, new Vec3(165, 165, 165), white)
             .RotateY(-18)
             .Translate(130, 0, 65);
         world.Add(new ConstantMedium(box2, 0.01, new Vec3(1, 1, 1)));

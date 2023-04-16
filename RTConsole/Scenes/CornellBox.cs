@@ -43,12 +43,12 @@ public class CornellBox : IScene
         world.Add(new RectXZ(0, 555, 0, 555, 555, white));
         world.Add(new RectXY(0, 555, 0, 555, 555, white));
         
-        world.Add(new Box(new Vec3(0, 0, 0), new Vec3(165, 330, 165), white)
+        world.Add(new Box(Vec3.Zero, new Vec3(165, 330, 165), white)
             .RotateY(15)
             .Translate(265, 0, 295)
         );
 
-        world.Add(new Box(new Vec3(0, 0, 0), new Vec3(165, 165, 165), white)
+        world.Add(new Box(Vec3.Zero, new Vec3(165, 165, 165), white)
             .RotateY(-18)
             .Translate(130, 0, 65)
         );

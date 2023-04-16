@@ -18,7 +18,7 @@ public class DiffuseLight : IMaterial
 
     public bool Scatter(Ray rIn, Hit rec, out Vec3 attenuation, out Ray scattered)
     {
-        attenuation = new Vec3();
+        attenuation = Vec3.Zero;
         scattered = new Ray();
         return false;
     }

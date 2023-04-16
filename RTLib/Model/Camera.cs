@@ -28,8 +28,8 @@ public class Camera
         var viewportHeight = 2 * h;
         var viewportWidth = aspectRatio * viewportHeight;
 
-        _w = Vec3.UnitVector(lookFrom - lookAt);
-        _u = Vec3.UnitVector(Vec3.Cross(vUp, _w));
+        _w = (lookFrom - lookAt).UnitVector();
+        _u = Vec3.Cross(vUp, _w).UnitVector();
         _v = Vec3.Cross(_w, _u);
         
         _origin = lookFrom;

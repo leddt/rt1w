@@ -21,7 +21,7 @@ public class Earth : IScene
     {
         return new Camera(
             lookFrom: new Vec3(13, 2, 3),
-            lookAt: new Vec3(0, 0, 0),
+            lookAt: Vec3.Zero,
             vUp: new Vec3(0, 1, 0),
             vfov: 20,
             GetRenderSettings().AspectRatio,
@@ -34,7 +34,7 @@ public class Earth : IScene
     {
         var earthTexture = new ImageTexture("Textures/earthmap.jpg");
         var earthSurface = new Lambertian(earthTexture);
-        var globe = new Sphere(new Vec3(0, 0, 0), 2, earthSurface);
+        var globe = new Sphere(Vec3.Zero, 2, earthSurface);
 
         return globe;
     }

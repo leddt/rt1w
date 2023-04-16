@@ -2,6 +2,8 @@
 
 public readonly struct Vec3
 {
+    public static readonly Vec3 Zero = new(0, 0, 0);
+    
     public Vec3(double x, double y, double z)
     {
         X = x;
@@ -33,7 +35,7 @@ public readonly struct Vec3
     public double Length => Math.Sqrt(LengthSquared);
     public double LengthSquared => X * X + Y * Y + Z * Z;
 
-    public Vec3 ToRGB(int samplesPerPixel)
+    public Vec3 ToRgb(int samplesPerPixel)
     {
         // Divide the color by the number of samples and gamma-correct for gamma=2.0.
         var scale = 1.0 / samplesPerPixel;
@@ -72,8 +74,18 @@ public readonly struct Vec3
         a.Z * b.X - a.X * b.Z,
         a.X * b.Y - a.Y * b.X
     );
-    public static Vec3 UnitVector(Vec3 v) => v / v.Length;
+    public Vec3 UnitVector() => this / Length;
 
+    public Vec3 Reflect(Vec3 n) => this - 2 * Dot(this, n) * n;
+
+    public Vec3 Refract(Vec3 n, double etaiOverEtat)
+    {
+        var cosTheta = Math.Min(Dot(-this, n), 1);
+        var rOutPerp = etaiOverEtat * (this + cosTheta * n);
+        var rOutParallel = -Math.Sqrt(Math.Abs(1 - rOutPerp.LengthSquared)) * n;
+        return rOutPerp + rOutParallel;
+    }
+    
     public static Vec3 Random() => new(
         System.Random.Shared.NextDouble(),
         System.Random.Shared.NextDouble(),
@@ -98,7 +110,7 @@ public readonly struct Vec3
 
     public static Vec3 RandomUnitVector()
     {
-        return UnitVector(RandomInUnitSphere());
+        return RandomInUnitSphere().UnitVector();
     }
 
     public static Vec3 RandomInHemisphere(Vec3 normal)
@@ -118,18 +130,5 @@ public readonly struct Vec3
             if (p.LengthSquared >= 1) continue;
             return p;
         }
-    }
-
-    public static Vec3 Reflect(Vec3 v, Vec3 n)
-    {
-        return v - 2 * Dot(v, n) * n;
-    }
-
-    public static Vec3 Refract(Vec3 uv, Vec3 n, double etaiOverEtat)
-    {
-        var cosTheta = Math.Min(Dot(-uv, n), 1);
-        var rOutPerp = etaiOverEtat * (uv + cosTheta * n);
-        var rOutParallel = -Math.Sqrt(Math.Abs(1 - rOutPerp.LengthSquared)) * n;
-        return rOutPerp + rOutParallel;
     }
 }
