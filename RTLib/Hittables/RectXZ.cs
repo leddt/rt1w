@@ -7,8 +7,10 @@ public class RectXZ : IHittable
 {
     private readonly double _x0, _x1, _z0, _z1, _k;
     private readonly IMaterial _material;
+    private readonly bool _singleFace;
+    private readonly bool _flip;
 
-    public RectXZ(double x0, double x1, double z0, double z1, double k, IMaterial material)
+    public RectXZ(double x0, double x1, double z0, double z1, double k, IMaterial material, bool singleFace = false, bool flip = false)
     {
         _x0 = x0;
         _x1 = x1;
@@ -16,6 +18,8 @@ public class RectXZ : IHittable
         _z1 = z1;
         _k = k;
         _material = material;
+        _singleFace = singleFace;
+        _flip = flip;
     }
 
     public bool Hit(Ray r, double tMin, double tMax, ref Hit rec)
@@ -35,6 +39,10 @@ public class RectXZ : IHittable
 
         var outwardNormal = new Vec3(0, 1, 0);
         rec.SetFaceNormal(r, outwardNormal);
+        
+        if (_singleFace && rec.FrontFace == _flip)
+            return false;
+        
         rec.Material = _material;
         rec.P = r.At(t);
         return true;
