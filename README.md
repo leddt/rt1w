@@ -31,3 +31,11 @@ Available scenes:
 6. Cornell Box, with glass and metal boxes
 7. Cornell Box, with "smoky" materials for the boxes
 8. The final scene from book 2
+
+## Sample Renders
+
+### Random Scene
+![Random Scene](./samples/random-scene.png)
+
+### Final Scene
+![Final Scene](./samples/final-scene.png)
