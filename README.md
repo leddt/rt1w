@@ -19,7 +19,7 @@ cd RTConsole
 dotnet run -c Release -- [output_file_name].png [scene_number_from_1_to_8]
 
 # For example
-dotnet run -C Release -- image.png 1
+dotnet run -c Release -- image.png 1
 ```
 
 Available scenes:
