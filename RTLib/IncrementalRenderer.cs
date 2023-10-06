@@ -5,6 +5,8 @@ namespace RTLib;
 
 public class IncrementalRenderer : Renderer
 {
+    private const int BatchSize = 10;
+    
     public IncrementalRenderer(RenderSettings settings) : base(settings)
     {
     }
@@ -15,23 +17,22 @@ public class IncrementalRenderer : Renderer
         
         var canvas = new Vec3[Settings.ImageWidth, Settings.ImageHeight];
         var samplesRemaining = Settings.SamplesPerPixel;
+        var batchCount = (Settings.SamplesPerPixel + BatchSize - 1) / BatchSize;
         
-        for (var s = 0; s < Settings.SamplesPerPixel; s++)
+        for (var b = 0; b < batchCount; b++)
         {
             Parallel.For(0, Settings.ImageHeight, j =>
             {
+                for (var s = 0; s < BatchSize; s++)
                 for (var i = 0; i < Settings.ImageWidth; i++)
                 {
                     canvas[i, j] += GetSample(background, scene, camera, i, j);
                 }
             });
 
-            if (s % 10 == 0)
-            {
-                frameReady(GetFrame(canvas, s + 1));
-            }
+            frameReady(GetFrame(canvas, (b + 1) * BatchSize));
 
-            log($"\r{Interlocked.Decrement(ref samplesRemaining)} samples remaining ");
+            log($"\r{Interlocked.Add(ref samplesRemaining, -BatchSize)} samples remaining ");
         }
     }
 
