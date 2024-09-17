@@ -1,7 +1,7 @@
 set windows-powershell := true
 
-build:
-    dotnet build -c Release
+build CONFIG='Release':
+    dotnet build -c {{CONFIG}}
 
-render SCENE='1' OUTPUT='image.png': build
-    cd RTConsole; dotnet run --no-build -c Release -- {{OUTPUT}} {{SCENE}}
+render SCENE='1' OUTPUT='image.png' CONFIG='Release': (build CONFIG)
+    cd RTConsole; dotnet run --no-build -- {{OUTPUT}} {{SCENE}}
