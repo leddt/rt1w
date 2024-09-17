@@ -1,4 +1,7 @@
-﻿namespace RTLib.Textures;
+﻿using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+
+namespace RTLib.Textures;
 
 public class ImageTexture : ITexture
 {
