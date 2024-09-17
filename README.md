@@ -22,6 +22,8 @@ dotnet run -c Release -- [output_file_name].png [scene_number_from_1_to_8]
 dotnet run -c Release -- image.png 1
 ```
 
+If you have [Just](https://github.com/casey/just), you can also use `just render SCENE_NUMBER` to do the same.
+
 Available scenes:
 1. The _random scene_ from the end of book 1
 2. Two spheres with a checkered texture
